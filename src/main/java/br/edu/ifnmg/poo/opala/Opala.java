@@ -8,7 +8,7 @@ package br.edu.ifnmg.poo.opencoronelparking;
  *
  * @author bvan &lt;Bruno Vinícius at ifnmg&gt;
  */
-public class OpenCoronelParking {
+public class Opala {
 
     public static void main(String[] args) {
         LoginScreen.main(null);

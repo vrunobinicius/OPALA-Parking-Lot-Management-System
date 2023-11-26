@@ -19,7 +19,7 @@
   </NonVisualComponents>
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="2"/>
-    <Property name="title" type="java.lang.String" value="Coronel Parking"/>
+    <Property name="title" type="java.lang.String" value="OPALA Parking Lot Management System"/>
   </Properties>
   <SyntheticProperties>
     <SyntheticProperty name="menuBar" type="java.lang.String" value="menuMain"/>
