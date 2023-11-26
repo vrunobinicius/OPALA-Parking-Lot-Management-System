@@ -1,4 +1,4 @@
-**Projeto O.P.A.L.A - OPALA is a PArking Lot Assistant**
+**Projeto OPALA - OPALA is a PArking Lot Assistant**
 
 ## Descrição
 
