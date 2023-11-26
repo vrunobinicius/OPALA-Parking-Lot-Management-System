@@ -1,5 +1,10 @@
 **Projeto OPALA - OPALA is a PArking Lot Assistant**
 
+
+## ⚠️ PROJETO EM DESENVOLVIMENTO ⚠️
+A descrição abaixo expõe os recursos planejados até o fim do projeto, mas que podem ainda não ter sido implementados.
+
+
 ## Descrição
 
 OPALA, que significa "**O**PALA is a **PA**rking **L**ot **A**ssistant," é um sistema de gerenciamento para estacionamentos desenvolvido em Java utilizando Maven como gerenciador de dependências e MySQL/MariaDB como banco de dados.
