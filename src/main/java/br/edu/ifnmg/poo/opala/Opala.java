@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  */
 
-package br.edu.ifnmg.poo.opencoronelparking;
+package br.edu.ifnmg.poo.opala;
 
 /**
  *
