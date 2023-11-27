@@ -1,6 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- */
 package br.edu.ifnmg.poo.opala;
 
 import br.edu.ifnmg.poo.credential.Credential;
@@ -40,6 +37,8 @@ public class Opala {
         cDao.saveOrUpdate(c);
         UserDAO uDao = new UserDAO();
         uDao.saveOrUpdate(u);
+
+        System.out.println("RETORNO DE USUÁRIO >> " + cDao.authenticate(c));
 
     }
 }

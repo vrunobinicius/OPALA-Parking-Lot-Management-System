@@ -23,7 +23,7 @@ public class UserDAO extends Dao<User> {
     public String getSaveStatment() {
         return "insert into " + TABLE
                 + " (name, email, birthdate)"
-                + " values (?, ?, ?, ?)";
+                + " values (?, ?, ?)";
     }
 
     @Override

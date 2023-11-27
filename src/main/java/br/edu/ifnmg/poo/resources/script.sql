@@ -1,5 +1,5 @@
-create database opalabd;
-use opalabd;
+create database opaladb;
+use opaladb;
 
 create table user (
 ID bigint unsigned PRIMARY KEY AUTO_INCREMENT,

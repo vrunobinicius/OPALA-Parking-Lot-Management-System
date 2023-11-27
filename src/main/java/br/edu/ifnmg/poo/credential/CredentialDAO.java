@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package br.edu.ifnmg.poo.credential;
 
 import br.edu.ifnmg.poo.repository.Dao;
@@ -132,7 +128,8 @@ public class CredentialDAO extends Dao<Credential> {
 
             // Assemble the SQL statement with the id
             preparedStatement.setString(1, credential.getUsername());
-            preparedStatement.setString(2, credential.getPassword());
+            String password = credential.getPassword() + SALT;
+            preparedStatement.setString(2, password);
 
             // Performs the query on the database
             ResultSet resultSet = preparedStatement.executeQuery();
