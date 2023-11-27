@@ -35,7 +35,7 @@ public class Opala {
         }
         u.setCredential(c);
         c.setUser(u);
-        
+
         CredentialDAO cDao = new CredentialDAO();
         cDao.saveOrUpdate(c);
         UserDAO uDao = new UserDAO();

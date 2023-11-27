@@ -12,4 +12,11 @@
         <exec.mainClass>br.edu.ifnmg.poo.opala.Opala</exec.mainClass>
     </properties>
     <name>Opala</name>
+    <dependencies>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <version>8.2.0</version>
+        </dependency>
+    </dependencies>
 </project>
