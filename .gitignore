@@ -26,3 +26,4 @@ replay_pid*
 # IntelliJ project files
 .idea/
 /target/
+.DS_Store
