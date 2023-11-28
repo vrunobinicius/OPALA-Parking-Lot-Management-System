@@ -16,7 +16,7 @@ public class Opala {
 
     public static void main(String[] args) {
         LoginScreen.main(null);
-        Credential c = new Credential();
+        /*Credential c = new Credential();
         c.setEnabled(true);
         c.setLastAcces(LocalDate.of(2003, 1, 20));
         c.setPassword("senha123");
@@ -38,7 +38,7 @@ public class Opala {
         UserDAO uDao = new UserDAO();
         uDao.saveOrUpdate(u);
 
-        System.out.println("RETORNO DE USUÁRIO >> " + cDao.authenticate(c));
+        System.out.println("RETORNO DE USUÁRIO >> " + cDao.authenticate(c));*/
 
     }
 }
