@@ -45,13 +45,13 @@ public class MainScreen extends javax.swing.JFrame {
         pnlMenu = new javax.swing.JPanel();
         btnHome = new javax.swing.JButton();
         btnPayment = new javax.swing.JButton();
-        btnCalendar = new javax.swing.JButton();
+        btnRelatorio = new javax.swing.JButton();
         pnlMain = new javax.swing.JPanel();
         pnlHome = new javax.swing.JPanel();
         lblTitle = new javax.swing.JLabel();
         txtPlaca = new javax.swing.JTextField();
         txtVaga = new javax.swing.JTextField();
-        jComboBox1 = new javax.swing.JComboBox<>();
+        cBVeiculo = new javax.swing.JComboBox<>();
         lblEntrada = new javax.swing.JLabel();
         txtHora = new javax.swing.JTextField();
         txtData = new javax.swing.JTextField();
@@ -60,10 +60,21 @@ public class MainScreen extends javax.swing.JFrame {
         txtDataSaida = new javax.swing.JTextField();
         btnSalvar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
-        lblTitle1 = new javax.swing.JLabel();
-        jScrollPane2 = new javax.swing.JScrollPane();
+        lblEstacionamento = new javax.swing.JLabel();
+        scrPaneLista = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         pnlPayment = new javax.swing.JPanel();
+        lblEstacionamento1 = new javax.swing.JLabel();
+        btnTotal = new javax.swing.JButton();
+        btnPix = new javax.swing.JButton();
+        btnDinheiro = new javax.swing.JButton();
+        btnCartao = new javax.swing.JButton();
+        scrPnLista = new javax.swing.JScrollPane();
+        tblLista = new javax.swing.JTable();
+        pnlRelatorio = new javax.swing.JPanel();
+        btnBaixarMensal = new javax.swing.JButton();
+        btnBaixarDiario = new javax.swing.JButton();
+        lblEstacionamento2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("OPALA Parking Lot Management System");
@@ -98,11 +109,16 @@ public class MainScreen extends javax.swing.JFrame {
             }
         });
 
-        btnCalendar.setBackground(new java.awt.Color(157, 194, 132));
-        btnCalendar.setForeground(new java.awt.Color(255, 255, 255));
-        btnCalendar.setText("Calendario");
-        btnCalendar.setFocusPainted(false);
-        btnCalendar.setFocusable(false);
+        btnRelatorio.setBackground(new java.awt.Color(157, 194, 132));
+        btnRelatorio.setForeground(new java.awt.Color(255, 255, 255));
+        btnRelatorio.setText("Relatório");
+        btnRelatorio.setFocusPainted(false);
+        btnRelatorio.setFocusable(false);
+        btnRelatorio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRelatorioActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlMenuLayout = new javax.swing.GroupLayout(pnlMenu);
         pnlMenu.setLayout(pnlMenuLayout);
@@ -115,7 +131,7 @@ public class MainScreen extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlMenuLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnCalendar, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnRelatorio, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10))
         );
@@ -127,7 +143,7 @@ public class MainScreen extends javax.swing.JFrame {
                 .addGap(10, 10, 10)
                 .addComponent(btnPayment)
                 .addGap(10, 10, 10)
-                .addComponent(btnCalendar)
+                .addComponent(btnRelatorio)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -152,8 +168,8 @@ public class MainScreen extends javax.swing.JFrame {
         txtVaga.setCaretColor(new java.awt.Color(157, 230, 178));
         txtVaga.setPreferredSize(new java.awt.Dimension(65, 25));
 
-        jComboBox1.setBackground(new java.awt.Color(255, 255, 255));
-        jComboBox1.setForeground(new java.awt.Color(157, 194, 132));
+        cBVeiculo.setBackground(new java.awt.Color(255, 255, 255));
+        cBVeiculo.setForeground(new java.awt.Color(157, 194, 132));
 
         lblEntrada.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         lblEntrada.setForeground(new java.awt.Color(157, 230, 178));
@@ -193,10 +209,10 @@ public class MainScreen extends javax.swing.JFrame {
         btnCancelar.setForeground(new java.awt.Color(138, 182, 109));
         btnCancelar.setText("Cancelar");
 
-        lblTitle1.setBackground(new java.awt.Color(138, 182, 109));
-        lblTitle1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
-        lblTitle1.setForeground(new java.awt.Color(138, 182, 109));
-        lblTitle1.setText("Estacionamento");
+        lblEstacionamento.setBackground(new java.awt.Color(138, 182, 109));
+        lblEstacionamento.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblEstacionamento.setForeground(new java.awt.Color(138, 182, 109));
+        lblEstacionamento.setText("Estacionamento");
 
         jTable1.setBackground(new java.awt.Color(255, 255, 255));
         jTable1.setForeground(new java.awt.Color(138, 182, 109));
@@ -220,7 +236,7 @@ public class MainScreen extends javax.swing.JFrame {
         jTable1.setGridColor(new java.awt.Color(255, 255, 255));
         jTable1.setSelectionBackground(new java.awt.Color(157, 194, 132));
         jTable1.setSelectionForeground(new java.awt.Color(255, 255, 255));
-        jScrollPane2.setViewportView(jTable1);
+        scrPaneLista.setViewportView(jTable1);
 
         javax.swing.GroupLayout pnlHomeLayout = new javax.swing.GroupLayout(pnlHome);
         pnlHome.setLayout(pnlHomeLayout);
@@ -247,22 +263,22 @@ public class MainScreen extends javax.swing.JFrame {
                                 .addComponent(txtVaga, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGap(18, 18, 18)
                             .addGroup(pnlHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(jComboBox1, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cBVeiculo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(txtData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addComponent(txtPlaca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addGap(46, 46, 46)
                 .addGroup(pnlHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblTitle1)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 673, Short.MAX_VALUE))
+                    .addComponent(lblEstacionamento)
+                    .addComponent(scrPaneLista, javax.swing.GroupLayout.DEFAULT_SIZE, 892, Short.MAX_VALUE))
                 .addGap(50, 50, 50))
         );
         pnlHomeLayout.setVerticalGroup(
             pnlHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlHomeLayout.createSequentialGroup()
-                .addContainerGap(55, Short.MAX_VALUE)
+                .addContainerGap(74, Short.MAX_VALUE)
                 .addGroup(pnlHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblTitle)
-                    .addComponent(lblTitle1))
+                    .addComponent(lblEstacionamento))
                 .addGap(37, 37, 37)
                 .addGroup(pnlHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(pnlHomeLayout.createSequentialGroup()
@@ -270,7 +286,7 @@ public class MainScreen extends javax.swing.JFrame {
                         .addGap(10, 10, 10)
                         .addGroup(pnlHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cBVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(35, 35, 35)
                         .addComponent(lblEntrada)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -287,26 +303,148 @@ public class MainScreen extends javax.swing.JFrame {
                         .addGroup(pnlHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(jScrollPane2))
-                .addContainerGap(65, Short.MAX_VALUE))
+                    .addComponent(scrPaneLista))
+                .addContainerGap(84, Short.MAX_VALUE))
         );
 
         pnlMain.add(pnlHome, "Home");
 
         pnlPayment.setBackground(new java.awt.Color(255, 255, 255));
 
+        lblEstacionamento1.setBackground(new java.awt.Color(138, 182, 109));
+        lblEstacionamento1.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblEstacionamento1.setForeground(new java.awt.Color(138, 182, 109));
+        lblEstacionamento1.setText("CAIXA");
+
+        btnTotal.setBackground(new java.awt.Color(238, 255, 226));
+        btnTotal.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnTotal.setForeground(new java.awt.Color(138, 182, 109));
+        btnTotal.setText("TOTAL");
+
+        btnPix.setBackground(new java.awt.Color(238, 255, 226));
+        btnPix.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnPix.setForeground(new java.awt.Color(138, 182, 109));
+        btnPix.setText("PIX");
+
+        btnDinheiro.setBackground(new java.awt.Color(238, 255, 226));
+        btnDinheiro.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnDinheiro.setForeground(new java.awt.Color(138, 182, 109));
+        btnDinheiro.setText("DINHEIRO");
+
+        btnCartao.setBackground(new java.awt.Color(238, 255, 226));
+        btnCartao.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnCartao.setForeground(new java.awt.Color(138, 182, 109));
+        btnCartao.setText("CARTÃO");
+
+        tblLista.setBackground(new java.awt.Color(255, 255, 255));
+        tblLista.setForeground(new java.awt.Color(138, 182, 109));
+        tblLista.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Vaga", "Placa", "Veículo", "Horario Entrada", "Data Entrada"
+            }
+        ));
+        tblLista.setGridColor(new java.awt.Color(255, 255, 255));
+        tblLista.setSelectionBackground(new java.awt.Color(157, 194, 132));
+        tblLista.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        scrPnLista.setViewportView(tblLista);
+
         javax.swing.GroupLayout pnlPaymentLayout = new javax.swing.GroupLayout(pnlPayment);
         pnlPayment.setLayout(pnlPaymentLayout);
         pnlPaymentLayout.setHorizontalGroup(
             pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1149, Short.MAX_VALUE)
+            .addGroup(pnlPaymentLayout.createSequentialGroup()
+                .addContainerGap(100, Short.MAX_VALUE)
+                .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(scrPnLista, javax.swing.GroupLayout.PREFERRED_SIZE, 1168, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(pnlPaymentLayout.createSequentialGroup()
+                        .addComponent(btnPix, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(100, 100, 100)
+                        .addComponent(btnDinheiro, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(100, 100, 100)
+                        .addComponent(btnCartao, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(100, 100, 100)
+                        .addComponent(btnTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(100, Short.MAX_VALUE))
+            .addGroup(pnlPaymentLayout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(lblEstacionamento1)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlPaymentLayout.setVerticalGroup(
             pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 688, Short.MAX_VALUE)
+            .addGroup(pnlPaymentLayout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(lblEstacionamento1, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 55, Short.MAX_VALUE)
+                .addGroup(pnlPaymentLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDinheiro, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnPix, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCartao, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(50, 50, 50)
+                .addComponent(scrPnLista, javax.swing.GroupLayout.PREFERRED_SIZE, 385, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(82, Short.MAX_VALUE))
         );
 
         pnlMain.add(pnlPayment, "Payment");
+
+        pnlRelatorio.setBackground(new java.awt.Color(255, 255, 255));
+
+        btnBaixarMensal.setBackground(new java.awt.Color(238, 255, 226));
+        btnBaixarMensal.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        btnBaixarMensal.setForeground(new java.awt.Color(138, 182, 109));
+        btnBaixarMensal.setText("BAIXAR RELATORIO MENSAL (PDF)");
+
+        btnBaixarDiario.setBackground(new java.awt.Color(238, 255, 226));
+        btnBaixarDiario.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        btnBaixarDiario.setForeground(new java.awt.Color(138, 182, 109));
+        btnBaixarDiario.setText("BAIXAR RELATORIO DIÁRIO (PDF)");
+
+        lblEstacionamento2.setBackground(new java.awt.Color(138, 182, 109));
+        lblEstacionamento2.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
+        lblEstacionamento2.setForeground(new java.awt.Color(138, 182, 109));
+        lblEstacionamento2.setText("RELATÓRIO");
+
+        javax.swing.GroupLayout pnlRelatorioLayout = new javax.swing.GroupLayout(pnlRelatorio);
+        pnlRelatorio.setLayout(pnlRelatorioLayout);
+        pnlRelatorioLayout.setHorizontalGroup(
+            pnlRelatorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlRelatorioLayout.createSequentialGroup()
+                .addContainerGap(238, Short.MAX_VALUE)
+                .addGroup(pnlRelatorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnBaixarDiario, javax.swing.GroupLayout.PREFERRED_SIZE, 891, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnBaixarMensal, javax.swing.GroupLayout.PREFERRED_SIZE, 891, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(239, Short.MAX_VALUE))
+            .addGroup(pnlRelatorioLayout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(lblEstacionamento2)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        pnlRelatorioLayout.setVerticalGroup(
+            pnlRelatorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlRelatorioLayout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(lblEstacionamento2, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 154, Short.MAX_VALUE)
+                .addComponent(btnBaixarMensal, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(100, 100, 100)
+                .addComponent(btnBaixarDiario, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(218, Short.MAX_VALUE))
+        );
+
+        pnlMain.add(pnlRelatorio, "Relatorio");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -347,23 +485,39 @@ public class MainScreen extends javax.swing.JFrame {
         cardMainScreen.show(pnlMain, "Payment");
     }//GEN-LAST:event_btnPaymentActionPerformed
 
+    private void btnRelatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRelatorioActionPerformed
+        // TODO add your handling code here:
+        cardMainScreen.show(pnlMain, "Relatorio");
+    }//GEN-LAST:event_btnRelatorioActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnCalendar;
+    private javax.swing.JButton btnBaixarDiario;
+    private javax.swing.JButton btnBaixarMensal;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnCartao;
+    private javax.swing.JButton btnDinheiro;
     private javax.swing.JButton btnHome;
     private javax.swing.JButton btnPayment;
+    private javax.swing.JButton btnPix;
+    private javax.swing.JButton btnRelatorio;
     private javax.swing.JButton btnSalvar;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JButton btnTotal;
+    private javax.swing.JComboBox<String> cBVeiculo;
     private javax.swing.JTable jTable1;
     private javax.swing.JLabel lblEntrada;
+    private javax.swing.JLabel lblEstacionamento;
+    private javax.swing.JLabel lblEstacionamento1;
+    private javax.swing.JLabel lblEstacionamento2;
     private javax.swing.JLabel lblTitle;
-    private javax.swing.JLabel lblTitle1;
     private javax.swing.JPanel pnlHome;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlMenu;
     private javax.swing.JPanel pnlPayment;
+    private javax.swing.JPanel pnlRelatorio;
+    private javax.swing.JScrollPane scrPaneLista;
+    private javax.swing.JScrollPane scrPnLista;
+    private javax.swing.JTable tblLista;
     private javax.swing.JTextField txtData;
     private javax.swing.JTextField txtDataSaida;
     private javax.swing.JTextField txtHora;
