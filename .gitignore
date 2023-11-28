@@ -27,3 +27,4 @@ replay_pid*
 .idea/
 /target/
 .DS_Store
+src/main/java/br/edu/ifnmg/poo/repository/DbConnection.java

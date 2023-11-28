@@ -15,7 +15,7 @@ import java.util.logging.Logger;
 public class Opala {
 
     public static void main(String[] args) {
-        //LoginScreen.main(null);
+        LoginScreen.main(null);
         Credential c = new Credential();
         c.setEnabled(true);
         c.setLastAcces(LocalDate.of(2003, 1, 20));
