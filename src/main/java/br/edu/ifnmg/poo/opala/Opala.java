@@ -4,9 +4,12 @@ import br.edu.ifnmg.poo.credential.Credential;
 import br.edu.ifnmg.poo.credential.CredentialDAO;
 import br.edu.ifnmg.poo.user.User;
 import br.edu.ifnmg.poo.user.UserDAO;
+import com.formdev.flatlaf.FlatLightLaf;
 import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -74,6 +77,14 @@ public class Opala {
         c3.setUser(u3);
         cDao.saveOrUpdate(c3);
         uDao.saveOrUpdate(u3);
+        
+        
+        try {
+            UIManager.setLookAndFeel( new FlatLightLaf() );
+        } catch( UnsupportedLookAndFeelException ex ) {
+            System.err.println( "Failed to initialize LaF" );
+        }
+        
 
         LoginScreen.main(null);
     }
