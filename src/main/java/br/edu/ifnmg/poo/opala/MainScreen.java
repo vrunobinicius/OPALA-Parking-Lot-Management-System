@@ -132,6 +132,7 @@ public class MainScreen extends javax.swing.JFrame {
         btnHome.setBackground(new java.awt.Color(0, 57, 99));
         btnHome.setForeground(new java.awt.Color(255, 255, 255));
         btnHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Home.png"))); // NOI18N
+        btnHome.setBorderPainted(false);
         btnHome.setEnabled(false);
         btnHome.setFocusPainted(false);
         btnHome.setFocusable(false);
@@ -144,6 +145,7 @@ public class MainScreen extends javax.swing.JFrame {
         btnPayment.setBackground(new java.awt.Color(0, 57, 99));
         btnPayment.setForeground(new java.awt.Color(255, 255, 255));
         btnPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Cash.png"))); // NOI18N
+        btnPayment.setBorderPainted(false);
         btnPayment.setEnabled(false);
         btnPayment.setFocusPainted(false);
         btnPayment.setFocusable(false);
@@ -156,6 +158,7 @@ public class MainScreen extends javax.swing.JFrame {
         btnRelatorio.setBackground(new java.awt.Color(0, 57, 99));
         btnRelatorio.setForeground(new java.awt.Color(255, 255, 255));
         btnRelatorio.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Analyze.png"))); // NOI18N
+        btnRelatorio.setBorderPainted(false);
         btnRelatorio.setFocusPainted(false);
         btnRelatorio.setFocusable(false);
         btnRelatorio.addActionListener(new java.awt.event.ActionListener() {
@@ -167,6 +170,7 @@ public class MainScreen extends javax.swing.JFrame {
         btnSubscriber.setBackground(new java.awt.Color(0, 57, 99));
         btnSubscriber.setForeground(new java.awt.Color(255, 255, 255));
         btnSubscriber.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Tear-Off Calendar.png"))); // NOI18N
+        btnSubscriber.setBorderPainted(false);
         btnSubscriber.setEnabled(false);
         btnSubscriber.setFocusPainted(false);
         btnSubscriber.setFocusable(false);
@@ -179,6 +183,7 @@ public class MainScreen extends javax.swing.JFrame {
         btnUser.setBackground(new java.awt.Color(0, 57, 99));
         btnUser.setForeground(new java.awt.Color(255, 255, 255));
         btnUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Admin Settings Male.png"))); // NOI18N
+        btnUser.setBorderPainted(false);
         btnUser.setEnabled(false);
         btnUser.setFocusPainted(false);
         btnUser.setFocusable(false);
@@ -191,6 +196,7 @@ public class MainScreen extends javax.swing.JFrame {
         btnLogout.setBackground(new java.awt.Color(255, 0, 51));
         btnLogout.setForeground(new java.awt.Color(255, 255, 255));
         btnLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Logout.png"))); // NOI18N
+        btnLogout.setBorderPainted(false);
         btnLogout.setFocusPainted(false);
         btnLogout.setFocusable(false);
         btnLogout.addActionListener(new java.awt.event.ActionListener() {
@@ -203,7 +209,7 @@ public class MainScreen extends javax.swing.JFrame {
         pnlMenu.setLayout(pnlMenuLayout);
         pnlMenuLayout.setHorizontalGroup(
             pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(btnHome, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 37, Short.MAX_VALUE)
+            .addComponent(btnHome, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 60, Short.MAX_VALUE)
             .addComponent(btnPayment, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnSubscriber, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
             .addComponent(btnRelatorio, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -214,18 +220,17 @@ public class MainScreen extends javax.swing.JFrame {
             pnlMenuLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlMenuLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
-                .addComponent(btnHome)
-                .addGap(5, 5, 5)
-                .addComponent(btnPayment)
-                .addGap(5, 5, 5)
-                .addComponent(btnSubscriber)
-                .addGap(5, 5, 5)
-                .addComponent(btnRelatorio)
-                .addGap(5, 5, 5)
-                .addComponent(btnUser)
+                .addComponent(btnHome, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnPayment, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSubscriber, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnRelatorio, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnUser, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnLogout)
-                .addGap(5, 5, 5))
+                .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         pnlMain.setBackground(new java.awt.Color(255, 255, 255));
@@ -451,7 +456,7 @@ public class MainScreen extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(EstacionamentojPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblEstacionamento)
-                    .addComponent(scrPaneLista, javax.swing.GroupLayout.DEFAULT_SIZE, 1071, Short.MAX_VALUE))
+                    .addComponent(scrPaneLista, javax.swing.GroupLayout.DEFAULT_SIZE, 1036, Short.MAX_VALUE))
                 .addContainerGap())
         );
         EstacionamentojPanelLayout.setVerticalGroup(
@@ -535,11 +540,11 @@ public class MainScreen extends javax.swing.JFrame {
             .addGroup(ValoresBotoesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnPix, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
                 .addComponent(btnDinheiro, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 89, Short.MAX_VALUE)
                 .addComponent(btnCartao, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 100, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
                 .addComponent(btnTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -644,11 +649,11 @@ public class MainScreen extends javax.swing.JFrame {
         pnlRelatorioLayout.setHorizontalGroup(
             pnlRelatorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlRelatorioLayout.createSequentialGroup()
-                .addContainerGap(328, Short.MAX_VALUE)
+                .addContainerGap(311, Short.MAX_VALUE)
                 .addGroup(pnlRelatorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnBaixarDiario, javax.swing.GroupLayout.PREFERRED_SIZE, 891, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBaixarMensal, javax.swing.GroupLayout.PREFERRED_SIZE, 891, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(328, Short.MAX_VALUE))
+                .addContainerGap(310, Short.MAX_VALUE))
             .addGroup(pnlRelatorioLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addComponent(lblRelatorio)
