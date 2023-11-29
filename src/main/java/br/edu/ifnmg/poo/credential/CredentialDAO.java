@@ -100,7 +100,8 @@ public class CredentialDAO extends Dao<Credential> {
             credential = new Credential();
             credential.setId(resultSet.getLong("ID"));
             credential.setUsername(resultSet.getString("username"));
-            credential.setPassword(resultSet.getString("password"));
+            String password = resultSet.getString("password") + SALT;
+            credential.setPassword(password);
             credential.setLastAcces(resultSet.getObject("lastAccess", LocalDate.class));
             credential.setEnabled(resultSet.getBoolean("enabled"));
 

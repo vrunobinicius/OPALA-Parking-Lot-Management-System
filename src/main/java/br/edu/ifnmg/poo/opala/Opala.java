@@ -1,13 +1,5 @@
 package br.edu.ifnmg.poo.opala;
 
-import br.edu.ifnmg.poo.credential.Credential;
-import br.edu.ifnmg.poo.credential.CredentialDAO;
-import br.edu.ifnmg.poo.user.User;
-import br.edu.ifnmg.poo.user.UserDAO;
-import java.time.LocalDate;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 /**
  *
  * @author bvan &lt;Bruno Vinícius at ifnmg&gt;
