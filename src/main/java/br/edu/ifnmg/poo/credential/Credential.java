@@ -13,7 +13,7 @@ public class Credential extends Entity {
     private String username;
     private String password;
     private LocalDate lastAcces;
-    private boolean enabled;
+    private String typeUser;
     private User user;
 
     public Credential() {
@@ -44,14 +44,14 @@ public class Credential extends Entity {
         this.lastAcces = lastAcces;
     }
 
-    public boolean isEnabled() {
-        return enabled;
+    public String getTypeUser() {
+        return typeUser;
     }
 
-    public void setEnabled(boolean enabled) {
-        this.enabled = enabled;
+    public void setTypeUser(String typeUser) {
+        this.typeUser = typeUser;
     }
-
+    
     public User getUser() {
         return user;
     }
@@ -64,8 +64,10 @@ public class Credential extends Entity {
 
     @Override
     public String toString() {
-        return "Credential{" + "username=" + username + ", password=" + password
-                + ", lastAcces=" + lastAcces + ", enabled=" + enabled
+        return "Credential{" + "username=" + username 
+                + ", password=" + password
+                + ", lastAcces=" + lastAcces 
+                + ", typeUser=" + typeUser
                 + ", user=" + user + '}';
     }
 

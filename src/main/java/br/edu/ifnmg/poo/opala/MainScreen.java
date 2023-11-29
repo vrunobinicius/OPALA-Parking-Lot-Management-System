@@ -1,6 +1,6 @@
 package br.edu.ifnmg.poo.opala;
 
-import br.edu.ifnmg.poo.opala.LoginScreen;
+import br.edu.ifnmg.poo.credential.Credential;
 import java.awt.CardLayout;
 
 /**
@@ -20,6 +20,26 @@ public class MainScreen extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cardMainScreen = (CardLayout) pnlMain.getLayout();
+    }
+
+    public MainScreen(Credential credential) {
+        this();
+        switch (credential.getTypeUser()) {
+            case "Gerente" -> {
+                this.btnHome.setEnabled(true);
+                this.btnPayment.setEnabled(true);
+                this.btnSubscriber.setEnabled(true);
+                this.btnUser.setEnabled(true);
+            }
+            case "Funcionário" -> {
+                this.btnHome.setEnabled(true);
+                this.btnPayment.setEnabled(true);
+                this.btnSubscriber.setEnabled(true);
+            }
+            case "Usuário" -> {
+                btnRelatorioActionPerformed(null);
+            }
+        }
     }
 
     public static MainScreen getInstance() {
@@ -111,6 +131,7 @@ public class MainScreen extends javax.swing.JFrame {
         btnHome.setBackground(new java.awt.Color(0, 57, 99));
         btnHome.setForeground(new java.awt.Color(255, 255, 255));
         btnHome.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Home.png"))); // NOI18N
+        btnHome.setEnabled(false);
         btnHome.setFocusPainted(false);
         btnHome.setFocusable(false);
         btnHome.addActionListener(new java.awt.event.ActionListener() {
@@ -122,6 +143,7 @@ public class MainScreen extends javax.swing.JFrame {
         btnPayment.setBackground(new java.awt.Color(0, 57, 99));
         btnPayment.setForeground(new java.awt.Color(255, 255, 255));
         btnPayment.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Cash.png"))); // NOI18N
+        btnPayment.setEnabled(false);
         btnPayment.setFocusPainted(false);
         btnPayment.setFocusable(false);
         btnPayment.addActionListener(new java.awt.event.ActionListener() {
@@ -144,6 +166,7 @@ public class MainScreen extends javax.swing.JFrame {
         btnSubscriber.setBackground(new java.awt.Color(0, 57, 99));
         btnSubscriber.setForeground(new java.awt.Color(255, 255, 255));
         btnSubscriber.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Tear-Off Calendar.png"))); // NOI18N
+        btnSubscriber.setEnabled(false);
         btnSubscriber.setFocusPainted(false);
         btnSubscriber.setFocusable(false);
         btnSubscriber.addActionListener(new java.awt.event.ActionListener() {
@@ -155,6 +178,7 @@ public class MainScreen extends javax.swing.JFrame {
         btnUser.setBackground(new java.awt.Color(0, 57, 99));
         btnUser.setForeground(new java.awt.Color(255, 255, 255));
         btnUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Admin Settings Male.png"))); // NOI18N
+        btnUser.setEnabled(false);
         btnUser.setFocusPainted(false);
         btnUser.setFocusable(false);
         btnUser.addActionListener(new java.awt.event.ActionListener() {
@@ -284,6 +308,11 @@ public class MainScreen extends javax.swing.JFrame {
         btnSalvar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnSalvar.setForeground(new java.awt.Color(255, 255, 255));
         btnSalvar.setText("Salvar");
+        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalvarActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setBackground(new java.awt.Color(255, 164, 164));
         btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -312,40 +341,42 @@ public class MainScreen extends javax.swing.JFrame {
         EntradaDeVeiculosjPanelLayout.setHorizontalGroup(
             EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(FieldObservacoes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(FieldObservacoes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
+                                .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblTitle)
+                                    .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(txtSaida)
+                                        .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
+                                            .addComponent(txtVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                            .addComponent(cBVeiculo, 0, 160, Short.MAX_VALUE))
+                                        .addComponent(txtPlaca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
+                                            .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(txtHoraSaida, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
+                                                .addComponent(txtHora, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                            .addGap(0, 0, 0)
+                                            .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                .addComponent(txtDataSaida, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
+                                                .addComponent(txtData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                    .addComponent(lblEntrada)
+                                    .addComponent(txtObservacoes))
+                                .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
                         .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblTitle)
-                            .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtSaida)
-                                .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
-                                    .addGap(6, 6, 6)
-                                    .addComponent(txtVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(cBVeiculo, 0, 160, Short.MAX_VALUE))
-                                .addComponent(txtPlaca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
-                                    .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtHoraSaida, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
-                                        .addComponent(txtHora, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addGap(0, 0, 0)
-                                    .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtDataSaida, javax.swing.GroupLayout.DEFAULT_SIZE, 160, Short.MAX_VALUE)
-                                        .addComponent(txtData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                            .addComponent(lblEntrada)
-                            .addComponent(txtObservacoes))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                            .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
+                                .addGap(109, 109, 109)
+                                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
+                                .addGap(63, 63, 63)
+                                .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 72, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
-                .addGap(109, 109, 109)
-                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EntradaDeVeiculosjPanelLayout.createSequentialGroup()
-                .addContainerGap(77, Short.MAX_VALUE)
-                .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(64, 64, 64))
         );
         EntradaDeVeiculosjPanelLayout.setVerticalGroup(
             EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -419,7 +450,7 @@ public class MainScreen extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(EstacionamentojPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblEstacionamento)
-                    .addComponent(scrPaneLista, javax.swing.GroupLayout.DEFAULT_SIZE, 1036, Short.MAX_VALUE))
+                    .addComponent(scrPaneLista, javax.swing.GroupLayout.DEFAULT_SIZE, 1071, Short.MAX_VALUE))
                 .addContainerGap())
         );
         EstacionamentojPanelLayout.setVerticalGroup(
@@ -438,7 +469,7 @@ public class MainScreen extends javax.swing.JFrame {
             .addGroup(pnlHomeLayout.createSequentialGroup()
                 .addGap(55, 55, 55)
                 .addComponent(EntradaDeVeiculosjPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(41, 41, 41)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(EstacionamentojPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(72, 72, 72))
         );
@@ -903,6 +934,10 @@ public class MainScreen extends javax.swing.JFrame {
     private void btnPixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPixActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnPixActionPerformed
+
+    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnSalvarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

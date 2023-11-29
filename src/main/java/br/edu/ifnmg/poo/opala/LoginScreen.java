@@ -6,7 +6,6 @@ import br.edu.ifnmg.poo.user.User;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
-import javax.swing.UIManager;
 
 /**
  *
@@ -15,7 +14,6 @@ import javax.swing.UIManager;
 public class LoginScreen extends javax.swing.JFrame {
 
     private static LoginScreen instance;
-    private float i;
 
     /**
      * Creates new form LoginScreen
@@ -253,8 +251,9 @@ public class LoginScreen extends javax.swing.JFrame {
         CredentialDAO credentialDao = new CredentialDAO();
         User user = credentialDao.authenticate(credential);
         if (user != null) {
+            credential = user.getCredential();
             this.setVisible(false);
-            MainScreen.getInstance().setVisible(true);
+            new MainScreen(credential).setVisible(true);
             lblErrorLogin.setText("");
         } else {
             lblErrorLogin.setText("Usuário ou Senha incorretos.");

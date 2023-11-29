@@ -25,7 +25,7 @@ public class CredentialDAO extends Dao<Credential> {
     @Override
     public String getSaveStatment() {
         return "insert into " + TABLE
-                + " (username, password, lastAccess, enabled)"
+                + " (username, password, lastAccess, typeUser)"
                 + " values (?, MD5(?), ?, ?)";
     }
 
@@ -33,7 +33,7 @@ public class CredentialDAO extends Dao<Credential> {
     public String getUpdateStatment() {
         return "update " + TABLE
                 + " set username = ?, password = MD5(?), "
-                + "lastAccess = ?, anabled = ?"
+                + "lastAccess = ?, typeUser = ?"
                 + " where ID = ?";
     }
 
@@ -44,10 +44,10 @@ public class CredentialDAO extends Dao<Credential> {
             String password = e.getPassword() + SALT;
             pstmt.setString(2, password);
             pstmt.setObject(3, e.getLastAcces(), java.sql.Types.DATE);
-            pstmt.setBoolean(4, e.isEnabled());
+            pstmt.setString(4, e.getTypeUser());
 
             if (e.getId() != null) {
-                pstmt.setLong(6, e.getId());
+                pstmt.setLong(5, e.getId());
             }
         } catch (SQLException ex) {
             Logger.getLogger(CredentialDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -57,14 +57,14 @@ public class CredentialDAO extends Dao<Credential> {
     @Override
     public String getFindByIdStatment() {
         return "select ID, username, password, "
-                + "lastAccess, enabled"
+                + "lastAccess, typeUser"
                 + " from " + TABLE + " where ID = ?";
     }
 
     @Override
     public String getFindAllStatment() {
         return "select ID, username, password, "
-                + "lastAccess, enabled"
+                + "lastAccess, typeUser"
                 + " from " + TABLE;
     }
 
@@ -103,7 +103,7 @@ public class CredentialDAO extends Dao<Credential> {
             String password = resultSet.getString("password") + SALT;
             credential.setPassword(password);
             credential.setLastAcces(resultSet.getObject("lastAccess", LocalDate.class));
-            credential.setEnabled(resultSet.getBoolean("enabled"));
+            credential.setTypeUser(resultSet.getString("typeUser"));
 
             UserDAO userDao = new UserDAO();
             User user = userDao.findById(credential.getId());

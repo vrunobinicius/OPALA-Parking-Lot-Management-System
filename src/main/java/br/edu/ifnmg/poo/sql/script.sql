@@ -13,7 +13,7 @@ ID bigint unsigned PRIMARY KEY AUTO_INCREMENT,
 username varchar(15) NOT NULL,
 password varchar(32) NOT NULL,
 lastAccess DATE,
-enabled tinyint(1) NOT NULL
+typeUser varchar(15) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 desc user;
