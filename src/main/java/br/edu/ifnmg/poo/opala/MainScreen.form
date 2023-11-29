@@ -63,33 +63,12 @@
       <Layout>
         <DimensionLayout dim="0">
           <Group type="103" groupAlignment="0" attributes="0">
-              <Group type="102" attributes="0">
-                  <Group type="103" groupAlignment="0" attributes="0">
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                              <Component id="btnSubscriber" max="32767" attributes="0"/>
-                              <Component id="btnRelatorio" max="32767" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" attributes="0">
-                          <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" attributes="0">
-                              <Component id="btnUser" alignment="0" min="-2" max="-2" attributes="0"/>
-                              <Component id="btnPayment" alignment="0" min="-2" max="-2" attributes="0"/>
-                          </Group>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnHome" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <Group type="102" alignment="0" attributes="0">
-                          <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-                          <Component id="btnLogout" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <EmptySpace min="-2" pref="5" max="-2" attributes="0"/>
-              </Group>
+              <Component id="btnHome" alignment="1" pref="37" max="32767" attributes="0"/>
+              <Component id="btnPayment" alignment="1" max="32767" attributes="0"/>
+              <Component id="btnSubscriber" alignment="1" max="32767" attributes="0"/>
+              <Component id="btnRelatorio" alignment="1" max="32767" attributes="0"/>
+              <Component id="btnUser" alignment="1" max="32767" attributes="0"/>
+              <Component id="btnLogout" alignment="1" max="32767" attributes="0"/>
           </Group>
         </DimensionLayout>
         <DimensionLayout dim="1">
@@ -293,8 +272,9 @@
                                       <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
                                           <Component id="txtSaida" alignment="0" min="-2" max="-2" attributes="0"/>
                                           <Group type="102" alignment="0" attributes="0">
+                                              <EmptySpace min="6" pref="6" max="-2" attributes="0"/>
                                               <Component id="txtVaga" min="-2" pref="147" max="-2" attributes="0"/>
-                                              <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
                                               <Component id="cBVeiculo" pref="160" max="32767" attributes="0"/>
                                           </Group>
                                           <Component id="txtPlaca" alignment="0" max="32767" attributes="0"/>
@@ -324,7 +304,7 @@
                           <EmptySpace max="32767" attributes="0"/>
                       </Group>
                       <Group type="102" alignment="1" attributes="0">
-                          <EmptySpace pref="65" max="32767" attributes="0"/>
+                          <EmptySpace pref="77" max="32767" attributes="0"/>
                           <Component id="btnSalvar" min="-2" pref="190" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="64" max="-2" attributes="0"/>
                       </Group>
@@ -338,9 +318,9 @@
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="txtPlaca" min="-2" pref="59" max="-2" attributes="0"/>
                           <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
-                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                              <Component id="txtVaga" min="-2" pref="40" max="-2" attributes="0"/>
-                              <Component id="cBVeiculo" min="-2" pref="40" max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="3" attributes="0">
+                              <Component id="cBVeiculo" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
+                              <Component id="txtVaga" alignment="3" min="-2" pref="40" max="-2" attributes="0"/>
                           </Group>
                           <EmptySpace type="separate" max="-2" attributes="0"/>
                           <Component id="lblEntrada" min="-2" max="-2" attributes="0"/>
@@ -687,7 +667,7 @@
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Component id="lblEstacionamento" min="-2" max="-2" attributes="0"/>
-                              <Component id="scrPaneLista" pref="1048" max="32767" attributes="0"/>
+                              <Component id="scrPaneLista" pref="1036" max="32767" attributes="0"/>
                           </Group>
                           <EmptySpace min="-2" max="-2" attributes="0"/>
                       </Group>
