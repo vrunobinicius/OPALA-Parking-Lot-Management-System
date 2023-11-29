@@ -40,6 +40,7 @@ public class MainScreen extends javax.swing.JFrame {
                 btnRelatorioActionPerformed(null);
             }
         }
+        this.setTitle(this.getTitle() + " - " + credential.getUser().getName());
     }
 
     public static MainScreen getInstance() {
