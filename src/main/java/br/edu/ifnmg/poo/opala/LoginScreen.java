@@ -3,9 +3,11 @@ package br.edu.ifnmg.poo.opala;
 import br.edu.ifnmg.poo.credential.Credential;
 import br.edu.ifnmg.poo.credential.CredentialDAO;
 import br.edu.ifnmg.poo.user.User;
+import com.formdev.flatlaf.util.SystemInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.Timer;
+import osSpecific.OSValidator;
 
 /**
  *
@@ -21,23 +23,44 @@ public class LoginScreen extends javax.swing.JFrame {
     public LoginScreen() {
         initComponents();
         //setLocationRelativeTo(null);
-        new Timer(50, new ActionListener() {
-            float opacity = 0f;
 
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                // Aumenta a opacidade em 0.05
-                opacity += 0.05f;
-
-                // Define a nova opacidade
-                setOpacity(Math.min(opacity, 1f));
-
-                // Se a opacidade chegar a 1, para o Timer
-                if (opacity >= 1f) {
-                    ((Timer) e.getSource()).stop();
-                }
+//        new Timer(50, new ActionListener() {
+//            float opacity = 0f;
+//
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//                // Aumenta a opacidade em 0.05
+//                opacity += 0.05f;
+//
+//                // Define a nova opacidade
+//                setOpacity(Math.min(opacity, 1f));
+//
+//                // Se a opacidade chegar a 1, para o Timer
+//                if (opacity >= 1f) {
+//                    ((Timer) e.getSource()).stop();
+//                }
+//            }
+//        }).start();
+        
+        this.btnExitLogin.setVisible(false);
+        
+        if (OSValidator.IS_WINDOWS) {
+            System.out.println("This is Windows");
+            this.setUndecorated(true);
+            this.btnExitLogin.setVisible(true);
+        } else if (OSValidator.IS_MAC) {
+            System.out.println("This is Mac");
+            if (SystemInfo.isMacFullWindowContentSupported) {
+                getRootPane().putClientProperty("apple.awt.fullWindowContent", true);
+                getRootPane().putClientProperty("apple.awt.transparentTitleBar", true);
             }
-        }).start();
+        } else if (OSValidator.IS_UNIX) {
+            System.out.println("This is Unix or Linux");
+        } else if (OSValidator.IS_SOLARIS) {
+            System.out.println("This is Solaris");
+        } else {
+            System.out.println("No, this is Patrick");
+        }
     }
 
     public static LoginScreen getInstance() {
@@ -46,6 +69,8 @@ public class LoginScreen extends javax.swing.JFrame {
         }
         return instance;
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -70,9 +95,7 @@ public class LoginScreen extends javax.swing.JFrame {
         imgLogin1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Login");
         setBackground(new java.awt.Color(255, 255, 255));
-        setUndecorated(true);
         setPreferredSize(new java.awt.Dimension(695, 310));
         setResizable(false);
 
@@ -199,7 +222,7 @@ public class LoginScreen extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addComponent(btnExitLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblBemVindo, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(44, 44, 44)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
