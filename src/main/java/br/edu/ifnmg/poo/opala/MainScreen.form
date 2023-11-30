@@ -294,9 +294,9 @@
                                                           <Component id="txtHora" max="32767" attributes="0"/>
                                                       </Group>
                                                       <EmptySpace min="0" pref="0" max="-2" attributes="0"/>
-                                                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                                                          <Component id="txtDataSaida" pref="160" max="32767" attributes="0"/>
+                                                      <Group type="103" groupAlignment="0" attributes="0">
                                                           <Component id="txtData" max="32767" attributes="0"/>
+                                                          <Component id="txtDataSaida" max="32767" attributes="0"/>
                                                       </Group>
                                                   </Group>
                                               </Group>

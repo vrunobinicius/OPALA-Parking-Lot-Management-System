@@ -58,8 +58,11 @@ public class LoginScreen extends javax.swing.JFrame {
 //                }
 //            }
 //        }).start();
+
         if (OSValidator.IS_WINDOWS) {
             this.btnExitLogin.setVisible(true);
+        } else {
+            this.btnExitLogin.setVisible(false);
         }
     }
 
@@ -156,6 +159,7 @@ public class LoginScreen extends javax.swing.JFrame {
         btnToEnter.setBackground(new java.awt.Color(0, 133, 255));
         btnToEnter.setForeground(new java.awt.Color(255, 255, 255));
         btnToEnter.setText("ENTRAR");
+        btnToEnter.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnToEnter.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnToEnterActionPerformed(evt);
@@ -219,7 +223,7 @@ public class LoginScreen extends javax.swing.JFrame {
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addComponent(btnExitLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnExitLogin)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(lblBemVindo, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(44, 44, 44)
