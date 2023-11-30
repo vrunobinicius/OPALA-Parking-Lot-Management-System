@@ -21,6 +21,23 @@ public class LoginScreen extends javax.swing.JFrame {
      * Creates new form LoginScreen
      */
     public LoginScreen() {
+
+        if (OSValidator.IS_WINDOWS) {
+            System.out.println("This is Windows");
+            this.setUndecorated(true);
+        } else if (OSValidator.IS_MAC) {
+            System.out.println("This is Mac");
+            if (SystemInfo.isMacFullWindowContentSupported) {
+                getRootPane().putClientProperty("apple.awt.fullWindowContent", true);
+                getRootPane().putClientProperty("apple.awt.transparentTitleBar", true);
+            }
+        } else if (OSValidator.IS_UNIX) {
+            System.out.println("This is Unix or Linux");
+        } else if (OSValidator.IS_SOLARIS) {
+            System.out.println("This is Solaris");
+        } else {
+            System.out.println("No, this is Patrick");
+        }
         initComponents();
         //setLocationRelativeTo(null);
 
@@ -41,25 +58,8 @@ public class LoginScreen extends javax.swing.JFrame {
 //                }
 //            }
 //        }).start();
-        
-        this.btnExitLogin.setVisible(false);
-        
         if (OSValidator.IS_WINDOWS) {
-            System.out.println("This is Windows");
-            this.setUndecorated(true);
             this.btnExitLogin.setVisible(true);
-        } else if (OSValidator.IS_MAC) {
-            System.out.println("This is Mac");
-            if (SystemInfo.isMacFullWindowContentSupported) {
-                getRootPane().putClientProperty("apple.awt.fullWindowContent", true);
-                getRootPane().putClientProperty("apple.awt.transparentTitleBar", true);
-            }
-        } else if (OSValidator.IS_UNIX) {
-            System.out.println("This is Unix or Linux");
-        } else if (OSValidator.IS_SOLARIS) {
-            System.out.println("This is Solaris");
-        } else {
-            System.out.println("No, this is Patrick");
         }
     }
 
@@ -69,8 +69,6 @@ public class LoginScreen extends javax.swing.JFrame {
         }
         return instance;
     }
-    
-    
 
     /**
      * This method is called from within the constructor to initialize the form.
