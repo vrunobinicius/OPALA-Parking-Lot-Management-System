@@ -2,6 +2,8 @@ package br.edu.ifnmg.poo.opala;
 
 import br.edu.ifnmg.poo.credential.Credential;
 import java.awt.CardLayout;
+import java.awt.Color;
+import javax.swing.JButton;
 
 /**
  *
@@ -11,6 +13,7 @@ public class MainScreen extends javax.swing.JFrame {
 
     private static MainScreen instance;
     private final CardLayout cardMainScreen;
+    private JButton lastClickedButton;
 
     /**
      * Creates new form MainScreen
@@ -48,6 +51,14 @@ public class MainScreen extends javax.swing.JFrame {
             instance = new MainScreen();
         }
         return instance;
+    }
+
+    private void changeColorButton(JButton button) {
+        if (lastClickedButton != null) {
+            lastClickedButton.setBackground(null);
+        }
+        button.setBackground(Color.decode("#0085FF"));
+        lastClickedButton = button;
     }
 
     /**
@@ -905,26 +916,31 @@ public class MainScreen extends javax.swing.JFrame {
     private void btnHomeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHomeActionPerformed
         // TODO add your handling code here:
         cardMainScreen.show(pnlMain, "Home");
+        changeColorButton(btnHome);
     }//GEN-LAST:event_btnHomeActionPerformed
 
     private void btnPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaymentActionPerformed
         // TODO add your handling code here:
         cardMainScreen.show(pnlMain, "Payment");
+        changeColorButton(btnPayment);
     }//GEN-LAST:event_btnPaymentActionPerformed
 
     private void btnRelatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRelatorioActionPerformed
         // TODO add your handling code here:
         cardMainScreen.show(pnlMain, "Relatorio");
+        changeColorButton(btnRelatorio);
     }//GEN-LAST:event_btnRelatorioActionPerformed
 
     private void btnSubscriberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSubscriberActionPerformed
         // TODO add your handling code here:
         cardMainScreen.show(pnlMain, "Subscriber");
+        changeColorButton(btnSubscriber);
     }//GEN-LAST:event_btnSubscriberActionPerformed
 
     private void btnUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserActionPerformed
         // TODO add your handling code here:
         cardMainScreen.show(pnlMain, "User");
+        changeColorButton(btnUser);
     }//GEN-LAST:event_btnUserActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
@@ -944,7 +960,6 @@ public class MainScreen extends javax.swing.JFrame {
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnSalvarActionPerformed
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel EntradaDeVeiculosjPanel;
