@@ -194,11 +194,11 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="84" green="c2" red="9d" type="rgb"/>
+              <Color blue="ff" green="85" red="0" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="VrunoBinicius"/>
             <Property name="caretColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="b2" green="e6" red="9d" type="rgb"/>
+              <Color blue="ff" green="85" red="0" type="rgb"/>
             </Property>
           </Properties>
         </Component>
@@ -208,11 +208,11 @@
               <Color blue="ff" green="ff" red="ff" type="rgb"/>
             </Property>
             <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="84" green="c2" red="9d" type="rgb"/>
+              <Color blue="ff" green="85" red="0" type="rgb"/>
             </Property>
             <Property name="text" type="java.lang.String" value="senha123"/>
             <Property name="caretColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-              <Color blue="b2" green="e6" red="9d" type="rgb"/>
+              <Color blue="ff" green="85" red="0" type="rgb"/>
             </Property>
           </Properties>
         </Component>

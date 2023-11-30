@@ -141,14 +141,14 @@ public class LoginScreen extends javax.swing.JFrame {
         });
 
         txtUser.setBackground(new java.awt.Color(255, 255, 255));
-        txtUser.setForeground(new java.awt.Color(157, 194, 132));
+        txtUser.setForeground(new java.awt.Color(0, 133, 255));
         txtUser.setText("VrunoBinicius");
-        txtUser.setCaretColor(new java.awt.Color(157, 230, 178));
+        txtUser.setCaretColor(new java.awt.Color(0, 133, 255));
 
         pwdUser.setBackground(new java.awt.Color(255, 255, 255));
-        pwdUser.setForeground(new java.awt.Color(157, 194, 132));
+        pwdUser.setForeground(new java.awt.Color(0, 133, 255));
         pwdUser.setText("senha123");
-        pwdUser.setCaretColor(new java.awt.Color(157, 230, 178));
+        pwdUser.setCaretColor(new java.awt.Color(0, 133, 255));
 
         lblBemVindo.setFont(new java.awt.Font("Helvetica Neue", 1, 24)); // NOI18N
         lblBemVindo.setForeground(new java.awt.Color(0, 133, 255));
