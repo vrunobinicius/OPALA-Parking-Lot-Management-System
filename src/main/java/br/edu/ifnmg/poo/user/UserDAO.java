@@ -1,13 +1,9 @@
 package br.edu.ifnmg.poo.user;
 
-import br.edu.ifnmg.poo.credential.Credential;
-import br.edu.ifnmg.poo.credential.CredentialDAO;
 import br.edu.ifnmg.poo.repository.Dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDate;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -22,15 +18,15 @@ public class UserDAO extends Dao<User> {
     @Override
     public String getSaveStatment() {
         return "insert into " + TABLE
-                + " (name, email, birthdate)"
+                + " (name, email, telephone)"
                 + " values (?, ?, ?)";
     }
 
     @Override
     public String getUpdateStatment() {
         return "update " + TABLE
-                + " set name = ?, email = ?, birthdate = ?"
-                + " where ID = ?";
+                + " set name = ?, email = ?, telephone = ?"
+                + " where id = ?";
     }
 
     @Override
@@ -38,10 +34,10 @@ public class UserDAO extends Dao<User> {
         try {
             pstmt.setString(1, e.getName());
             pstmt.setString(2, e.getEmail());
-            pstmt.setObject(3, e.getBirthdate(), java.sql.Types.DATE);
+            pstmt.setLong(3, e.getTelephone());
 
             if (e.getId() != null) {
-                pstmt.setLong(5, e.getId());
+                pstmt.setLong(4, e.getId());
             }
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -50,19 +46,19 @@ public class UserDAO extends Dao<User> {
 
     @Override
     public String getFindByIdStatment() {
-        return "select ID, name, email, birthdate"
-                + " from " + TABLE + " where ID = ?";
+        return "select id, name, email, telephone"
+                + " from " + TABLE + " where id = ?";
     }
 
     @Override
     public String getFindAllStatment() {
-        return "select ID, name, email, birthdate"
+        return "select id, name, email, telephone"
                 + " from " + TABLE;
     }
 
     @Override
     public String getDeleteStatement() {
-        return "delete from " + TABLE + " where ID = ?";
+        return "delete from " + TABLE + " where id = ?";
     }
 
     @Override
@@ -70,10 +66,10 @@ public class UserDAO extends Dao<User> {
         User user = null;
         try {
             user = new User();
-            user.setId(resultSet.getLong("ID"));
+            user.setId(resultSet.getLong("id"));
             user.setName(resultSet.getString("name"));
             user.setEmail(resultSet.getString("email"));
-            user.setBirthdate(resultSet.getObject("birthdate", LocalDate.class));
+            user.setTelephone(resultSet.getLong("telephone"));
 
         } catch (SQLException ex) {
             Logger.getLogger(UserDAO.class.getName()).log(Level.SEVERE, null, ex);

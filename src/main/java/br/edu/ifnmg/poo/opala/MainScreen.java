@@ -1,9 +1,18 @@
 package br.edu.ifnmg.poo.opala;
 
 import br.edu.ifnmg.poo.credential.Credential;
+import br.edu.ifnmg.poo.driver.Driver;
+import br.edu.ifnmg.poo.driver.DriverDAO;
+import br.edu.ifnmg.poo.parkingSpace.ParkingSpace;
+import br.edu.ifnmg.poo.parkingSpace.ParkingSpaceDAO;
+import br.edu.ifnmg.poo.vehicle.Vehicle;
+import br.edu.ifnmg.poo.vehicle.VehicleDAO;
 import com.formdev.flatlaf.util.SystemInfo;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.time.LocalDateTime;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JButton;
 
 /**
@@ -38,19 +47,19 @@ public class MainScreen extends javax.swing.JFrame {
 
     public MainScreen(Credential credential) {
         this();
-        switch (credential.getTypeUser()) {
-            case "Gerente" -> {
+        switch (credential.getType()) {
+            case ADMIN -> {
                 this.btnHome.setEnabled(true);
                 this.btnPayment.setEnabled(true);
                 this.btnSubscriber.setEnabled(true);
                 this.btnUser.setEnabled(true);
             }
-            case "Funcionário" -> {
+            case OPERATOR -> {
                 this.btnHome.setEnabled(true);
                 this.btnPayment.setEnabled(true);
                 this.btnSubscriber.setEnabled(true);
             }
-            case "Usuário" -> {
+            case SUBSCRIBER -> {
                 btnRelatorioActionPerformed(null);
             }
         }
@@ -94,17 +103,23 @@ public class MainScreen extends javax.swing.JFrame {
         lblTitle = new javax.swing.JLabel();
         txtPlaca = new javax.swing.JTextField();
         txtVaga = new javax.swing.JTextField();
-        cBVeiculo = new javax.swing.JComboBox<>();
+        cBplace = new javax.swing.JComboBox<>();
         lblEntrada = new javax.swing.JLabel();
-        txtHora = new javax.swing.JTextField();
-        txtData = new javax.swing.JTextField();
+        txtCheckInTime = new javax.swing.JTextField();
+        txtCheckInDate = new javax.swing.JTextField();
         txtSaida = new javax.swing.JLabel();
-        txtHoraSaida = new javax.swing.JTextField();
-        txtDataSaida = new javax.swing.JTextField();
-        btnSalvar = new javax.swing.JButton();
-        btnCancelar = new javax.swing.JButton();
-        txtObservacoes = new javax.swing.JLabel();
-        FieldObservacoes = new javax.swing.JTextField();
+        txtCheckOutTime = new javax.swing.JTextField();
+        txtCheckOutDate = new javax.swing.JTextField();
+        btnSave = new javax.swing.JButton();
+        btnCancel = new javax.swing.JButton();
+        lblNote = new javax.swing.JLabel();
+        FieldNotes = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
         EstacionamentojPanel = new javax.swing.JPanel();
         scrPaneLista = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -271,7 +286,6 @@ public class MainScreen extends javax.swing.JFrame {
         txtPlaca.setBackground(new java.awt.Color(223, 249, 255));
         txtPlaca.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtPlaca.setForeground(new java.awt.Color(0, 0, 0));
-        txtPlaca.setText(" Placa: ");
         txtPlaca.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 133, 255)));
         txtPlaca.setCaretColor(new java.awt.Color(157, 230, 178));
         txtPlaca.setName("Placa:"); // NOI18N
@@ -280,18 +294,17 @@ public class MainScreen extends javax.swing.JFrame {
         txtVaga.setBackground(new java.awt.Color(223, 249, 255));
         txtVaga.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtVaga.setForeground(new java.awt.Color(0, 0, 0));
-        txtVaga.setText(" Vaga: ");
         txtVaga.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 133, 255), 1, true));
         txtVaga.setCaretColor(new java.awt.Color(157, 230, 178));
         txtVaga.setPreferredSize(new java.awt.Dimension(65, 25));
 
-        cBVeiculo.setBackground(new java.awt.Color(223, 249, 255));
-        cBVeiculo.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        cBVeiculo.setForeground(new java.awt.Color(0, 0, 0));
-        cBVeiculo.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 133, 255), 1, true));
-        cBVeiculo.addActionListener(new java.awt.event.ActionListener() {
+        cBplace.setBackground(new java.awt.Color(223, 249, 255));
+        cBplace.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        cBplace.setForeground(new java.awt.Color(0, 0, 0));
+        cBplace.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 133, 255), 1, true));
+        cBplace.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cBVeiculoActionPerformed(evt);
+                cBplaceActionPerformed(evt);
             }
         });
 
@@ -300,74 +313,103 @@ public class MainScreen extends javax.swing.JFrame {
         lblEntrada.setForeground(new java.awt.Color(0, 133, 255));
         lblEntrada.setText("Entrada:");
 
-        txtHora.setBackground(new java.awt.Color(223, 249, 255));
-        txtHora.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtHora.setForeground(new java.awt.Color(0, 0, 0));
-        txtHora.setText(" Horário: ");
-        txtHora.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 133, 255), 1, true));
-        txtHora.setCaretColor(new java.awt.Color(157, 230, 178));
-        txtHora.setPreferredSize(new java.awt.Dimension(65, 25));
+        txtCheckInTime.setBackground(new java.awt.Color(223, 249, 255));
+        txtCheckInTime.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtCheckInTime.setForeground(new java.awt.Color(0, 0, 0));
+        txtCheckInTime.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 133, 255), 1, true));
+        txtCheckInTime.setCaretColor(new java.awt.Color(157, 230, 178));
+        txtCheckInTime.setPreferredSize(new java.awt.Dimension(65, 25));
 
-        txtData.setBackground(new java.awt.Color(223, 249, 255));
-        txtData.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtData.setForeground(new java.awt.Color(0, 0, 0));
-        txtData.setText(" Data: ");
-        txtData.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 133, 255), 1, true));
-        txtData.setCaretColor(new java.awt.Color(157, 230, 178));
-        txtData.setPreferredSize(new java.awt.Dimension(65, 25));
+        txtCheckInDate.setBackground(new java.awt.Color(223, 249, 255));
+        txtCheckInDate.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtCheckInDate.setForeground(new java.awt.Color(0, 0, 0));
+        txtCheckInDate.setText(" ");
+        txtCheckInDate.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 133, 255), 1, true));
+        txtCheckInDate.setCaretColor(new java.awt.Color(157, 230, 178));
+        txtCheckInDate.setPreferredSize(new java.awt.Dimension(65, 25));
 
         txtSaida.setBackground(new java.awt.Color(0, 133, 255));
         txtSaida.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         txtSaida.setForeground(new java.awt.Color(0, 133, 255));
         txtSaida.setText("Saida:");
 
-        txtHoraSaida.setBackground(new java.awt.Color(223, 249, 255));
-        txtHoraSaida.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtHoraSaida.setForeground(new java.awt.Color(0, 0, 0));
-        txtHoraSaida.setText(" Horário: ");
-        txtHoraSaida.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 133, 255), 1, true));
-        txtHoraSaida.setCaretColor(new java.awt.Color(157, 230, 178));
-        txtHoraSaida.setPreferredSize(new java.awt.Dimension(65, 25));
+        txtCheckOutTime.setBackground(new java.awt.Color(223, 249, 255));
+        txtCheckOutTime.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtCheckOutTime.setForeground(new java.awt.Color(0, 0, 0));
+        txtCheckOutTime.setText(" ");
+        txtCheckOutTime.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 133, 255), 1, true));
+        txtCheckOutTime.setCaretColor(new java.awt.Color(157, 230, 178));
+        txtCheckOutTime.setPreferredSize(new java.awt.Dimension(65, 25));
 
-        txtDataSaida.setBackground(new java.awt.Color(223, 249, 255));
-        txtDataSaida.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtDataSaida.setForeground(new java.awt.Color(0, 0, 0));
-        txtDataSaida.setText(" Data: ");
-        txtDataSaida.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 133, 255), 1, true));
-        txtDataSaida.setCaretColor(new java.awt.Color(157, 230, 178));
-        txtDataSaida.setPreferredSize(new java.awt.Dimension(65, 25));
-
-        btnSalvar.setBackground(new java.awt.Color(0, 133, 255));
-        btnSalvar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnSalvar.setForeground(new java.awt.Color(255, 255, 255));
-        btnSalvar.setText("Salvar");
-        btnSalvar.addActionListener(new java.awt.event.ActionListener() {
+        txtCheckOutDate.setBackground(new java.awt.Color(223, 249, 255));
+        txtCheckOutDate.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        txtCheckOutDate.setForeground(new java.awt.Color(0, 0, 0));
+        txtCheckOutDate.setText("  ");
+        txtCheckOutDate.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 133, 255), 1, true));
+        txtCheckOutDate.setCaretColor(new java.awt.Color(157, 230, 178));
+        txtCheckOutDate.setPreferredSize(new java.awt.Dimension(65, 25));
+        txtCheckOutDate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSalvarActionPerformed(evt);
+                txtCheckOutDateActionPerformed(evt);
             }
         });
 
-        btnCancelar.setBackground(new java.awt.Color(255, 164, 164));
-        btnCancelar.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        btnCancelar.setForeground(new java.awt.Color(255, 0, 0));
-        btnCancelar.setText("Cancelar");
-
-        txtObservacoes.setBackground(new java.awt.Color(0, 133, 255));
-        txtObservacoes.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
-        txtObservacoes.setForeground(new java.awt.Color(0, 133, 255));
-        txtObservacoes.setText("Observações:");
-
-        FieldObservacoes.setBackground(new java.awt.Color(223, 249, 255));
-        FieldObservacoes.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        FieldObservacoes.setForeground(new java.awt.Color(0, 0, 0));
-        FieldObservacoes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 133, 255)));
-        FieldObservacoes.setCaretColor(new java.awt.Color(157, 230, 178));
-        FieldObservacoes.setPreferredSize(new java.awt.Dimension(65, 25));
-        FieldObservacoes.addActionListener(new java.awt.event.ActionListener() {
+        btnSave.setBackground(new java.awt.Color(0, 133, 255));
+        btnSave.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnSave.setForeground(new java.awt.Color(255, 255, 255));
+        btnSave.setText("Salvar");
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                FieldObservacoesActionPerformed(evt);
+                btnSaveActionPerformed(evt);
             }
         });
+
+        btnCancel.setBackground(new java.awt.Color(255, 164, 164));
+        btnCancel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        btnCancel.setForeground(new java.awt.Color(255, 0, 0));
+        btnCancel.setText("Cancelar");
+
+        lblNote.setBackground(new java.awt.Color(0, 133, 255));
+        lblNote.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
+        lblNote.setForeground(new java.awt.Color(0, 133, 255));
+        lblNote.setText("Observações:");
+
+        FieldNotes.setBackground(new java.awt.Color(223, 249, 255));
+        FieldNotes.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        FieldNotes.setForeground(new java.awt.Color(0, 0, 0));
+        FieldNotes.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 133, 255)));
+        FieldNotes.setCaretColor(new java.awt.Color(157, 230, 178));
+        FieldNotes.setPreferredSize(new java.awt.Dimension(65, 25));
+        FieldNotes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FieldNotesActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setBackground(new java.awt.Color(0, 0, 0));
+        jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel1.setText("Placa:");
+
+        jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel2.setText("Vaga:");
+
+        jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jLabel3.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel3.setText("Horário:");
+
+        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel4.setText("Data:");
+
+        jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel5.setText("Horário:");
+
+        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel6.setText("Data:");
 
         javax.swing.GroupLayout EntradaDeVeiculosjPanelLayout = new javax.swing.GroupLayout(EntradaDeVeiculosjPanel);
         EntradaDeVeiculosjPanel.setLayout(EntradaDeVeiculosjPanelLayout);
@@ -376,9 +418,18 @@ public class MainScreen extends javax.swing.JFrame {
             .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
                 .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
+                        .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
+                                .addGap(109, 109, 109)
+                                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
+                                .addGap(63, 63, 63)
+                                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(FieldObservacoes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(FieldNotes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
                                 .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblTitle)
@@ -387,28 +438,30 @@ public class MainScreen extends javax.swing.JFrame {
                                         .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
                                             .addComponent(txtVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
                                             .addGap(0, 0, 0)
-                                            .addComponent(cBVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(cBplace, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addComponent(txtPlaca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
-                                            .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                .addComponent(txtHoraSaida, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
-                                                .addComponent(txtHora, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                            .addGap(0, 0, 0)
                                             .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(txtData, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(txtDataSaida, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                                                .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                                    .addComponent(txtCheckOutTime, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
+                                                    .addComponent(txtCheckInTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                                .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
+                                                    .addComponent(jLabel3)
+                                                    .addGap(108, 108, 108))
+                                                .addComponent(jLabel5))
+                                            .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(txtCheckInDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addComponent(txtCheckOutDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                                .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
+                                                    .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                        .addComponent(jLabel6)
+                                                        .addComponent(jLabel4))
+                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
                                     .addComponent(lblEntrada)
-                                    .addComponent(txtObservacoes))
-                                .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
-                        .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
-                                .addGap(109, 109, 109)
-                                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
-                                .addGap(63, 63, 63)
-                                .addComponent(btnSalvar, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                                    .addComponent(lblNote)
+                                    .addComponent(jLabel1)
+                                    .addComponent(jLabel2))
+                                .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
         EntradaDeVeiculosjPanelLayout.setVerticalGroup(
@@ -416,32 +469,44 @@ public class MainScreen extends javax.swing.JFrame {
             .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblTitle)
-                .addGap(18, 18, 18)
+                .addGap(2, 2, 2)
+                .addComponent(jLabel1)
+                .addGap(0, 0, 0)
                 .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel2)
+                .addGap(0, 0, 0)
                 .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cBVeiculo, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cBplace, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txtVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
                 .addComponent(lblEntrada)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtHora, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtData, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel3)
+                    .addComponent(jLabel4))
+                .addGap(0, 0, 0)
+                .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCheckInTime, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCheckInDate, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(txtSaida)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtHoraSaida, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtDataSaida, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel5)
+                    .addComponent(jLabel6))
+                .addGap(0, 0, 0)
+                .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtCheckOutTime, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCheckOutDate, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(12, 12, 12)
-                .addComponent(txtObservacoes)
+                .addComponent(lblNote)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(FieldObservacoes, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(FieldNotes, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnCancelar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSalvar, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE))
+                .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE))
         );
 
         EstacionamentojPanel.setBackground(new java.awt.Color(255, 255, 255));
@@ -483,7 +548,7 @@ public class MainScreen extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(EstacionamentojPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblEstacionamento)
-                    .addComponent(scrPaneLista, javax.swing.GroupLayout.DEFAULT_SIZE, 1014, Short.MAX_VALUE))
+                    .addComponent(scrPaneLista, javax.swing.GroupLayout.DEFAULT_SIZE, 1019, Short.MAX_VALUE))
                 .addContainerGap())
         );
         EstacionamentojPanelLayout.setVerticalGroup(
@@ -492,7 +557,7 @@ public class MainScreen extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(lblEstacionamento)
                 .addGap(18, 18, 18)
-                .addComponent(scrPaneLista, javax.swing.GroupLayout.DEFAULT_SIZE, 541, Short.MAX_VALUE))
+                .addComponent(scrPaneLista))
         );
 
         javax.swing.GroupLayout pnlHomeLayout = new javax.swing.GroupLayout(pnlHome);
@@ -500,20 +565,20 @@ public class MainScreen extends javax.swing.JFrame {
         pnlHomeLayout.setHorizontalGroup(
             pnlHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlHomeLayout.createSequentialGroup()
-                .addGap(55, 55, 55)
+                .addGap(70, 70, 70)
                 .addComponent(EntradaDeVeiculosjPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(EstacionamentojPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(72, 72, 72))
+                .addGap(70, 70, 70))
         );
         pnlHomeLayout.setVerticalGroup(
             pnlHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlHomeLayout.createSequentialGroup()
-                .addGap(103, 103, 103)
+                .addGap(100, 100, 100)
                 .addGroup(pnlHomeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(EstacionamentojPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(EntradaDeVeiculosjPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(82, 82, 82))
+                .addGap(80, 80, 80))
         );
 
         pnlMain.add(pnlHome, "Home");
@@ -567,11 +632,11 @@ public class MainScreen extends javax.swing.JFrame {
             .addGroup(ValoresBotoesLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(btnPix, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 82, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 86, Short.MAX_VALUE)
                 .addComponent(btnDinheiro, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 81, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
                 .addComponent(btnCartao, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 80, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 84, Short.MAX_VALUE)
                 .addComponent(btnTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 212, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -626,7 +691,7 @@ public class MainScreen extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addComponent(ValoresBotoes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(34, 34, 34)
-                .addComponent(scrPnLista, javax.swing.GroupLayout.DEFAULT_SIZE, 408, Short.MAX_VALUE))
+                .addComponent(scrPnLista, javax.swing.GroupLayout.DEFAULT_SIZE, 448, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout pnlPaymentLayout = new javax.swing.GroupLayout(pnlPayment);
@@ -676,11 +741,11 @@ public class MainScreen extends javax.swing.JFrame {
         pnlRelatorioLayout.setHorizontalGroup(
             pnlRelatorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlRelatorioLayout.createSequentialGroup()
-                .addContainerGap(300, Short.MAX_VALUE)
+                .addContainerGap(306, Short.MAX_VALUE)
                 .addGroup(pnlRelatorioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnBaixarDiario, javax.swing.GroupLayout.PREFERRED_SIZE, 891, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnBaixarMensal, javax.swing.GroupLayout.PREFERRED_SIZE, 891, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(299, Short.MAX_VALUE))
+                .addContainerGap(305, Short.MAX_VALUE))
             .addGroup(pnlRelatorioLayout.createSequentialGroup()
                 .addGap(5, 5, 5)
                 .addComponent(lblRelatorio)
@@ -695,7 +760,7 @@ public class MainScreen extends javax.swing.JFrame {
                 .addComponent(btnBaixarMensal, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(100, 100, 100)
                 .addComponent(btnBaixarDiario, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(266, Short.MAX_VALUE))
+                .addContainerGap(306, Short.MAX_VALUE))
         );
 
         pnlMain.add(pnlRelatorio, "Relatorio");
@@ -794,7 +859,7 @@ public class MainScreen extends javax.swing.JFrame {
                         .addComponent(pnlSearchIcon, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnAddSubscriber, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
-                .addComponent(scrPaneLista1, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
+                .addComponent(scrPaneLista1, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE)
                 .addGap(50, 50, 50))
         );
 
@@ -894,7 +959,7 @@ public class MainScreen extends javax.swing.JFrame {
                         .addComponent(pnlSearchIconUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnAddUser, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
-                .addComponent(scrPaneLista2, javax.swing.GroupLayout.DEFAULT_SIZE, 551, Short.MAX_VALUE)
+                .addComponent(scrPaneLista2, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE)
                 .addGap(50, 50, 50))
         );
 
@@ -965,32 +1030,75 @@ public class MainScreen extends javax.swing.JFrame {
         formWindowClosing(null);
     }//GEN-LAST:event_btnLogoutActionPerformed
 
-    private void FieldObservacoesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FieldObservacoesActionPerformed
+    private void FieldNotesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FieldNotesActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_FieldObservacoesActionPerformed
+    }//GEN-LAST:event_FieldNotesActionPerformed
 
     private void btnPixActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPixActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnPixActionPerformed
 
-    private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnSalvarActionPerformed
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        try {
+            // TODO add your handling code here:
+            Driver driver = new Driver();
+            /*driver.setCredential(null);
+            driver.setEmail(null);
+            driver.setName(null);
+            driver.setTelephone(null);*/
+            driver.setTicket(1);
+            
+            ParkingSpace ps = new ParkingSpace();
+            ps.setDriver(driver);
+            ps.setNumber(Short.parseShort(txtVaga.getText()));
+            driver.addParkingSpace(ps);
+            ps.setArrivalTime(LocalDateTime.now());
+            
+            Vehicle v = new Vehicle();
+            v.setNote(FieldNotes.getText());
+            v.setLicensePlate(txtPlaca.getText());
+            v.setDriver(driver);
+            
+            DriverDAO dDao = new DriverDAO();
+            dDao.saveOrUpdate(driver);
+            
+            v.setId_driver(driver.getId());
+            ps.setId_driver(driver.getId());
+            
+            VehicleDAO vDao = new VehicleDAO();
+            vDao.saveOrUpdate(v);
+            
+            ParkingSpaceDAO pDao = new ParkingSpaceDAO();
+            pDao.saveOrUpdate(ps);
+            
+            jTable1.getModel().setValueAt(ps.getNumber(), 0, 0);
+            jTable1.getModel().setValueAt(v.getLicensePlate(), 0, 1);
+            
+        } catch (Exception ex) {
+            Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }//GEN-LAST:event_btnSaveActionPerformed
 
-    private void cBVeiculoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cBVeiculoActionPerformed
+    private void cBplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cBplaceActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cBVeiculoActionPerformed
+
+    }//GEN-LAST:event_cBplaceActionPerformed
+
+    private void txtCheckOutDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCheckOutDateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCheckOutDateActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel EntradaDeVeiculosjPanel;
     private javax.swing.JPanel EstacionamentojPanel;
-    private javax.swing.JTextField FieldObservacoes;
+    private javax.swing.JTextField FieldNotes;
     private javax.swing.JPanel ValoresBotoes;
     private javax.swing.JButton btnAddSubscriber;
     private javax.swing.JButton btnAddUser;
     private javax.swing.JButton btnBaixarDiario;
     private javax.swing.JButton btnBaixarMensal;
-    private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnCancel;
     private javax.swing.JButton btnCartao;
     private javax.swing.JButton btnDinheiro;
     private javax.swing.JButton btnHome;
@@ -998,11 +1106,17 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JButton btnPayment;
     private javax.swing.JButton btnPix;
     private javax.swing.JButton btnRelatorio;
-    private javax.swing.JButton btnSalvar;
+    private javax.swing.JButton btnSave;
     private javax.swing.JButton btnSubscriber;
     private javax.swing.JButton btnTotal;
     private javax.swing.JButton btnUser;
-    private javax.swing.JComboBox<String> cBVeiculo;
+    private javax.swing.JComboBox<String> cBplace;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
@@ -1011,6 +1125,7 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JLabel lblEntrada;
     private javax.swing.JLabel lblEstacionamento;
     private javax.swing.JLabel lblMensalista;
+    private javax.swing.JLabel lblNote;
     private javax.swing.JLabel lblRelatorio;
     private javax.swing.JLabel lblSearchIcon;
     private javax.swing.JLabel lblSearchIconUser;
@@ -1030,11 +1145,10 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JScrollPane scrPaneLista2;
     private javax.swing.JScrollPane scrPnLista;
     private javax.swing.JTable tblLista;
-    private javax.swing.JTextField txtData;
-    private javax.swing.JTextField txtDataSaida;
-    private javax.swing.JTextField txtHora;
-    private javax.swing.JTextField txtHoraSaida;
-    private javax.swing.JLabel txtObservacoes;
+    private javax.swing.JTextField txtCheckInDate;
+    private javax.swing.JTextField txtCheckInTime;
+    private javax.swing.JTextField txtCheckOutDate;
+    private javax.swing.JTextField txtCheckOutTime;
     private javax.swing.JTextField txtPlaca;
     private javax.swing.JLabel txtSaida;
     private javax.swing.JTextField txtSearchSubscriber;

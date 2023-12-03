@@ -2,7 +2,6 @@ package br.edu.ifnmg.poo.user;
 
 import br.edu.ifnmg.poo.credential.Credential;
 import br.edu.ifnmg.poo.entity.Entity;
-import java.time.LocalDate;
 
 /**
  *
@@ -12,11 +11,10 @@ public class User extends Entity {
 
     private String name;
     private String email;
-    private LocalDate birthdate;
+    private Long telephone;
     private Credential credential;
 
     //<editor-fold defaultstate="collapsed" desc="GETTERS/SETTTERS">
-
     public Credential getCredential() {
         return credential;
     }
@@ -30,7 +28,7 @@ public class User extends Entity {
     }
 
     public void setName(String name) throws Exception {
-        if (name.length() > 255 || name == null) {
+        if (name.length() > 150) {
             throw new Exception();
         } else {
             this.name = name;
@@ -42,33 +40,29 @@ public class User extends Entity {
     }
 
     public void setEmail(String email) throws Exception {
-        if (email.length() > 255 || email == null) {
+        if (email.length() > 255) {
             throw new Exception();
         } else {
             this.email = email;
         }
     }
 
-    public LocalDate getBirthdate() {
-        return birthdate;
+    public Long getTelephone() {
+        return telephone;
     }
 
-    public void setBirthdate(LocalDate birthdate) throws Exception {
-        if (birthdate == null) {
-            throw new Exception();
-        } else {
-            this.birthdate = birthdate;
-        }
+    public void setTelephone(Long telephone) {
+        this.telephone = telephone;
     }
+
     //</editor-fold>
 
     @Override
     public String toString() {
         return "User{" + "name=" + name 
                 + ", email=" + email 
-                + ", birthdate=" + birthdate + '}';
+                + ", telephone=" + telephone + '}';
     }
-
     
-
+    
 }
