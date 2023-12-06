@@ -5,15 +5,21 @@ import br.edu.ifnmg.poo.driver.Driver;
 import br.edu.ifnmg.poo.driver.DriverDAO;
 import br.edu.ifnmg.poo.parkingSpace.ParkingSpace;
 import br.edu.ifnmg.poo.parkingSpace.ParkingSpaceDAO;
+import br.edu.ifnmg.poo.repository.DbConnection;
 import br.edu.ifnmg.poo.vehicle.Vehicle;
 import br.edu.ifnmg.poo.vehicle.VehicleDAO;
 import com.formdev.flatlaf.util.SystemInfo;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -33,12 +39,10 @@ public class MainScreen extends javax.swing.JFrame {
         setLocationRelativeTo(null);
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
         cardMainScreen = (CardLayout) pnlMain.getLayout();
-        
+
         //Transparent title bar on macos
 //        if( SystemInfo.isMacFullWindowContentSupported )
 //            getRootPane().putClientProperty( "apple.awt.transparentTitleBar", true );
-        
-        
         if (SystemInfo.isMacFullWindowContentSupported) {
             getRootPane().putClientProperty("apple.awt.fullWindowContent", true);
             getRootPane().putClientProperty("apple.awt.transparentTitleBar", true);
@@ -79,6 +83,29 @@ public class MainScreen extends javax.swing.JFrame {
         }
         button.setBackground(Color.decode("#0085FF"));
         lastClickedButton = button;
+    }
+
+    public void FillTable(JTable table, String Query) throws SQLException {
+        try {
+            PreparedStatement pstmt = DbConnection.getConnection().prepareStatement(Query);
+            ResultSet rs = pstmt.executeQuery();
+            //To remove previously added rows
+            while (table.getRowCount() > 0) {
+                ((DefaultTableModel) table.getModel()).removeRow(0);
+            }
+            int columns = rs.getMetaData().getColumnCount();
+            while (rs.next()) {
+                Object[] row = new Object[columns];
+                for (int i = 1; i <= columns; i++) {
+                    row[i - 1] = rs.getObject(i);
+                }
+                ((DefaultTableModel) table.getModel()).insertRow(rs.getRow() - 1, row);
+            }
+
+            rs.close();
+
+        } catch (SQLException e) {
+        }
     }
 
     /**
@@ -531,19 +558,10 @@ public class MainScreen extends javax.swing.JFrame {
         jTable1.setForeground(new java.awt.Color(0, 133, 255));
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+
             },
             new String [] {
-                "Vaga", "Placa", "Veículo", "Horario Entrada", "Data Entrada"
+
             }
         ));
         jTable1.setGridColor(new java.awt.Color(255, 255, 255));
@@ -1063,37 +1081,37 @@ public class MainScreen extends javax.swing.JFrame {
             driver.setName(null);
             driver.setTelephone(null);*/
             driver.setTicket(1);
-            
+
             ParkingSpace ps = new ParkingSpace();
             ps.setDriver(driver);
             ps.setNumber(Short.parseShort(txtVaga.getText()));
             driver.addParkingSpace(ps);
             ps.setArrivalTime(LocalDateTime.now());
-            
+
             Vehicle v = new Vehicle();
             v.setNote(FieldNotes.getText());
             v.setLicensePlate(txtPlaca.getText());
             v.setDriver(driver);
-            
+
             DriverDAO dDao = new DriverDAO();
             dDao.saveOrUpdate(driver);
-            
+
             v.setId_driver(driver.getId());
             ps.setId_driver(driver.getId());
-            
+
             VehicleDAO vDao = new VehicleDAO();
             vDao.saveOrUpdate(v);
-            
+
             ParkingSpaceDAO pDao = new ParkingSpaceDAO();
             pDao.saveOrUpdate(ps);
-            
-            jTable1.getModel().setValueAt(ps.getNumber(), 0, 0);
-            jTable1.getModel().setValueAt(v.getLicensePlate(), 0, 1);
-            
+
+//            jTable1.getModel().setValueAt(ps.getNumber(), 0, 0);
+//            jTable1.getModel().setValueAt(v.getLicensePlate(), 0, 1);
+            FillTable(jTable1, "select * from vehicle");
         } catch (Exception ex) {
             Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
+
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void cBplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cBplaceActionPerformed
