@@ -120,6 +120,7 @@ public class MainScreen extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
         EstacionamentojPanel = new javax.swing.JPanel();
         scrPaneLista = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
@@ -302,6 +303,7 @@ public class MainScreen extends javax.swing.JFrame {
         cBplace.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         cBplace.setForeground(new java.awt.Color(0, 0, 0));
         cBplace.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 133, 255), 1, true));
+        cBplace.setPreferredSize(new java.awt.Dimension(65, 25));
         cBplace.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cBplaceActionPerformed(evt);
@@ -324,9 +326,15 @@ public class MainScreen extends javax.swing.JFrame {
         txtCheckInDate.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
         txtCheckInDate.setForeground(new java.awt.Color(0, 0, 0));
         txtCheckInDate.setText(" ");
+        txtCheckInDate.setToolTipText("");
         txtCheckInDate.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 133, 255), 1, true));
         txtCheckInDate.setCaretColor(new java.awt.Color(157, 230, 178));
         txtCheckInDate.setPreferredSize(new java.awt.Dimension(65, 25));
+        txtCheckInDate.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCheckInDateActionPerformed(evt);
+            }
+        });
 
         txtSaida.setBackground(new java.awt.Color(0, 133, 255));
         txtSaida.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -411,6 +419,10 @@ public class MainScreen extends javax.swing.JFrame {
         jLabel6.setForeground(new java.awt.Color(0, 0, 0));
         jLabel6.setText("Data:");
 
+        jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
+        jLabel7.setForeground(new java.awt.Color(0, 0, 0));
+        jLabel7.setText("Tipo de Veículo");
+
         javax.swing.GroupLayout EntradaDeVeiculosjPanelLayout = new javax.swing.GroupLayout(EntradaDeVeiculosjPanel);
         EntradaDeVeiculosjPanel.setLayout(EntradaDeVeiculosjPanelLayout);
         EntradaDeVeiculosjPanelLayout.setHorizontalGroup(
@@ -435,32 +447,31 @@ public class MainScreen extends javax.swing.JFrame {
                                     .addComponent(lblTitle)
                                     .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(txtSaida)
-                                        .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
-                                            .addComponent(txtVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 153, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGap(0, 0, 0)
-                                            .addComponent(cBplace, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addComponent(txtPlaca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
                                             .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                                     .addComponent(txtCheckOutTime, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
                                                     .addComponent(txtCheckInTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
-                                                    .addComponent(jLabel3)
-                                                    .addGap(108, 108, 108))
+                                                .addComponent(jLabel3)
                                                 .addComponent(jLabel5))
+                                            .addGap(0, 0, 0)
                                             .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addComponent(txtCheckInDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(txtCheckOutDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
-                                                    .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                        .addComponent(jLabel6)
-                                                        .addComponent(jLabel4))
-                                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))))
+                                                .addComponent(jLabel6)
+                                                .addComponent(jLabel4)))
+                                        .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
+                                            .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel2)
+                                                .addComponent(txtVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGap(0, 0, 0)
+                                            .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(jLabel7)
+                                                .addComponent(cBplace, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                     .addComponent(lblEntrada)
                                     .addComponent(lblNote)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2))
+                                    .addComponent(jLabel1))
                                 .addGap(0, 0, Short.MAX_VALUE)))))
                 .addContainerGap())
         );
@@ -474,39 +485,44 @@ public class MainScreen extends javax.swing.JFrame {
                 .addGap(0, 0, 0)
                 .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jLabel2)
-                .addGap(0, 0, 0)
                 .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cBplace, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20)
-                .addComponent(lblEntrada)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel3)
-                    .addComponent(jLabel4))
-                .addGap(0, 0, 0)
-                .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCheckInTime, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCheckInDate, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addComponent(txtSaida)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(jLabel6))
-                .addGap(0, 0, 0)
-                .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCheckOutTime, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtCheckOutDate, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addComponent(lblNote)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(FieldNotes, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE))
+                    .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(0, 0, 0)
+                        .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cBplace, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(20, 20, 20)
+                        .addComponent(lblEntrada)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel4))
+                        .addGap(0, 0, 0)
+                        .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtCheckInTime, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCheckInDate, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(txtSaida)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel6))
+                        .addGap(0, 0, 0)
+                        .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtCheckOutTime, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCheckOutDate, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12)
+                        .addComponent(lblNote)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(FieldNotes, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE))
+                    .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
+                        .addComponent(jLabel7)
+                        .addGap(0, 0, Short.MAX_VALUE))))
         );
 
         EstacionamentojPanel.setBackground(new java.awt.Color(255, 255, 255));
@@ -548,7 +564,7 @@ public class MainScreen extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(EstacionamentojPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblEstacionamento)
-                    .addComponent(scrPaneLista, javax.swing.GroupLayout.DEFAULT_SIZE, 1019, Short.MAX_VALUE))
+                    .addComponent(scrPaneLista, javax.swing.GroupLayout.DEFAULT_SIZE, 1025, Short.MAX_VALUE))
                 .addContainerGap())
         );
         EstacionamentojPanelLayout.setVerticalGroup(
@@ -1089,6 +1105,10 @@ public class MainScreen extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCheckOutDateActionPerformed
 
+    private void txtCheckInDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCheckInDateActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCheckInDateActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel EntradaDeVeiculosjPanel;
     private javax.swing.JPanel EstacionamentojPanel;
@@ -1117,6 +1137,7 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
