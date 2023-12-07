@@ -11,15 +11,19 @@ import br.edu.ifnmg.poo.vehicle.VehicleDAO;
 import com.formdev.flatlaf.util.SystemInfo;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -47,6 +51,10 @@ public class MainScreen extends javax.swing.JFrame {
             getRootPane().putClientProperty("apple.awt.fullWindowContent", true);
             getRootPane().putClientProperty("apple.awt.transparentTitleBar", true);
         }
+
+        DefaultTableModel model = (DefaultTableModel) tableDriver.getModel();
+        tableDriver.setRowSorter(new TableRowSorter(model));
+        FillTable(tableDriver, "selct * from vehicle");
     }
 
     public MainScreen(Credential credential) {
@@ -85,26 +93,17 @@ public class MainScreen extends javax.swing.JFrame {
         lastClickedButton = button;
     }
 
-    public void FillTable(JTable table, String Query) throws SQLException {
-        try {
-            PreparedStatement pstmt = DbConnection.getConnection().prepareStatement(Query);
-            ResultSet rs = pstmt.executeQuery();
-            //To remove previously added rows
-            while (table.getRowCount() > 0) {
-                ((DefaultTableModel) table.getModel()).removeRow(0);
-            }
-            int columns = rs.getMetaData().getColumnCount();
-            while (rs.next()) {
-                Object[] row = new Object[columns];
-                for (int i = 1; i <= columns; i++) {
-                    row[i - 1] = rs.getObject(i);
-                }
-                ((DefaultTableModel) table.getModel()).insertRow(rs.getRow() - 1, row);
-            }
-
-            rs.close();
-
-        } catch (SQLException e) {
+    public void FillTable(JTable table, String Query) {
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        VehicleDAO vDao = new VehicleDAO();
+        
+        List<Vehicle> vList = vDao.findAll();
+        
+        for (Vehicle v : vList) {
+            model.addRow(new Object[] {
+                v.getId(),
+                v.getLicensePlate()
+            });
         }
     }
 
@@ -150,7 +149,7 @@ public class MainScreen extends javax.swing.JFrame {
         jLabel7 = new javax.swing.JLabel();
         EstacionamentojPanel = new javax.swing.JPanel();
         scrPaneLista = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableDriver = new javax.swing.JTable();
         lblEstacionamento = new javax.swing.JLabel();
         pnlPayment = new javax.swing.JPanel();
         lblCaixa = new javax.swing.JLabel();
@@ -554,20 +553,20 @@ public class MainScreen extends javax.swing.JFrame {
 
         EstacionamentojPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        jTable1.setBackground(new java.awt.Color(255, 255, 255));
-        jTable1.setForeground(new java.awt.Color(0, 133, 255));
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableDriver.setBackground(new java.awt.Color(255, 255, 255));
+        tableDriver.setForeground(new java.awt.Color(0, 133, 255));
+        tableDriver.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-
+                "ID", "Placa", "Vaga", "Tipo Veículo", "Horário de Entrada", "Observação"
             }
         ));
-        jTable1.setGridColor(new java.awt.Color(255, 255, 255));
-        jTable1.setSelectionBackground(new java.awt.Color(223, 249, 255));
-        jTable1.setSelectionForeground(new java.awt.Color(255, 255, 255));
-        scrPaneLista.setViewportView(jTable1);
+        tableDriver.setGridColor(new java.awt.Color(255, 255, 255));
+        tableDriver.setSelectionBackground(new java.awt.Color(223, 249, 255));
+        tableDriver.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        scrPaneLista.setViewportView(tableDriver);
 
         lblEstacionamento.setBackground(new java.awt.Color(0, 133, 255));
         lblEstacionamento.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -1104,10 +1103,6 @@ public class MainScreen extends javax.swing.JFrame {
 
             ParkingSpaceDAO pDao = new ParkingSpaceDAO();
             pDao.saveOrUpdate(ps);
-
-//            jTable1.getModel().setValueAt(ps.getNumber(), 0, 0);
-//            jTable1.getModel().setValueAt(v.getLicensePlate(), 0, 1);
-            FillTable(jTable1, "select * from vehicle");
         } catch (Exception ex) {
             Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1157,7 +1152,6 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTable jTable2;
     private javax.swing.JTable jTable3;
     private javax.swing.JLabel lblCaixa;
@@ -1183,6 +1177,7 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JScrollPane scrPaneLista1;
     private javax.swing.JScrollPane scrPaneLista2;
     private javax.swing.JScrollPane scrPnLista;
+    private javax.swing.JTable tableDriver;
     private javax.swing.JTable tblLista;
     private javax.swing.JTextField txtCheckInDate;
     private javax.swing.JTextField txtCheckInTime;
