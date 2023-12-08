@@ -5,23 +5,17 @@ import br.edu.ifnmg.poo.driver.Driver;
 import br.edu.ifnmg.poo.driver.DriverDAO;
 import br.edu.ifnmg.poo.parkingSpace.ParkingSpace;
 import br.edu.ifnmg.poo.parkingSpace.ParkingSpaceDAO;
-import br.edu.ifnmg.poo.repository.DbConnection;
 import br.edu.ifnmg.poo.vehicle.Vehicle;
 import br.edu.ifnmg.poo.vehicle.VehicleDAO;
 import com.formdev.flatlaf.util.SystemInfo;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JTable;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -54,7 +48,8 @@ public class MainScreen extends javax.swing.JFrame {
 
         DefaultTableModel model = (DefaultTableModel) tableDriver.getModel();
         tableDriver.setRowSorter(new TableRowSorter(model));
-        FillTable(tableDriver, "selct * from vehicle");
+        FillTable(tableDriver, "select * from vehicle");
+        FillCbPlaceComboBox();
     }
 
     public MainScreen(Credential credential) {
@@ -95,16 +90,36 @@ public class MainScreen extends javax.swing.JFrame {
 
     public void FillTable(JTable table, String Query) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setNumRows(0);
+
         VehicleDAO vDao = new VehicleDAO();
-        
+
         List<Vehicle> vList = vDao.findAll();
-        
-        for (Vehicle v : vList) {
-            model.addRow(new Object[] {
-                v.getId(),
-                v.getLicensePlate()
-            });
+        ParkingSpaceDAO pDao = new ParkingSpaceDAO();
+
+        if (vList != null) {
+            for (Vehicle v : vList) {
+                ParkingSpace p = pDao.findById(v.getId());
+                model.addRow(new Object[]{
+                    v.getLicensePlate(),
+                    p.getNumber(),
+                    v.getStringType(),
+                    p.getArrivalTime(),
+                    v.getNote()
+                });
+            }
         }
+    }
+
+    public void FillCbPlaceComboBox() {
+        cBplace.addItem("CARRO");
+        cBplace.addItem("MOTO");
+        cBplace.addItem("BICICLETA");
+        cBplace.addItem("CAMINHONETE");
+        cBplace.addItem("CAMINHAO");
+        cBplace.addItem("ONIBUS");
+        cBplace.addItem("TANK");
+        cBplace.addItem("HELICOPTER");
     }
 
     /**
@@ -132,10 +147,8 @@ public class MainScreen extends javax.swing.JFrame {
         cBplace = new javax.swing.JComboBox<>();
         lblEntrada = new javax.swing.JLabel();
         txtCheckInTime = new javax.swing.JTextField();
-        txtCheckInDate = new javax.swing.JTextField();
         txtSaida = new javax.swing.JLabel();
         txtCheckOutTime = new javax.swing.JTextField();
-        txtCheckOutDate = new javax.swing.JTextField();
         btnSave = new javax.swing.JButton();
         btnCancel = new javax.swing.JButton();
         lblNote = new javax.swing.JLabel();
@@ -143,9 +156,7 @@ public class MainScreen extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         EstacionamentojPanel = new javax.swing.JPanel();
         scrPaneLista = new javax.swing.JScrollPane();
@@ -348,20 +359,6 @@ public class MainScreen extends javax.swing.JFrame {
         txtCheckInTime.setCaretColor(new java.awt.Color(157, 230, 178));
         txtCheckInTime.setPreferredSize(new java.awt.Dimension(65, 25));
 
-        txtCheckInDate.setBackground(new java.awt.Color(223, 249, 255));
-        txtCheckInDate.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtCheckInDate.setForeground(new java.awt.Color(0, 0, 0));
-        txtCheckInDate.setText(" ");
-        txtCheckInDate.setToolTipText("");
-        txtCheckInDate.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 133, 255), 1, true));
-        txtCheckInDate.setCaretColor(new java.awt.Color(157, 230, 178));
-        txtCheckInDate.setPreferredSize(new java.awt.Dimension(65, 25));
-        txtCheckInDate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCheckInDateActionPerformed(evt);
-            }
-        });
-
         txtSaida.setBackground(new java.awt.Color(0, 133, 255));
         txtSaida.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
         txtSaida.setForeground(new java.awt.Color(0, 133, 255));
@@ -374,19 +371,6 @@ public class MainScreen extends javax.swing.JFrame {
         txtCheckOutTime.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 133, 255), 1, true));
         txtCheckOutTime.setCaretColor(new java.awt.Color(157, 230, 178));
         txtCheckOutTime.setPreferredSize(new java.awt.Dimension(65, 25));
-
-        txtCheckOutDate.setBackground(new java.awt.Color(223, 249, 255));
-        txtCheckOutDate.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
-        txtCheckOutDate.setForeground(new java.awt.Color(0, 0, 0));
-        txtCheckOutDate.setText("  ");
-        txtCheckOutDate.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 133, 255), 1, true));
-        txtCheckOutDate.setCaretColor(new java.awt.Color(157, 230, 178));
-        txtCheckOutDate.setPreferredSize(new java.awt.Dimension(65, 25));
-        txtCheckOutDate.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCheckOutDateActionPerformed(evt);
-            }
-        });
 
         btnSave.setBackground(new java.awt.Color(0, 133, 255));
         btnSave.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
@@ -402,6 +386,11 @@ public class MainScreen extends javax.swing.JFrame {
         btnCancel.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnCancel.setForeground(new java.awt.Color(255, 0, 0));
         btnCancel.setText("Cancelar");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
         lblNote.setBackground(new java.awt.Color(0, 133, 255));
         lblNote.setFont(new java.awt.Font("Segoe UI", 1, 16)); // NOI18N
@@ -433,17 +422,9 @@ public class MainScreen extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("Horário:");
 
-        jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel4.setText("Data:");
-
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(0, 0, 0));
         jLabel5.setText("Horário:");
-
-        jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(0, 0, 0));
-        jLabel6.setText("Data:");
 
         jLabel7.setFont(new java.awt.Font("Segoe UI", 1, 10)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
@@ -453,9 +434,10 @@ public class MainScreen extends javax.swing.JFrame {
         EntradaDeVeiculosjPanel.setLayout(EntradaDeVeiculosjPanelLayout);
         EntradaDeVeiculosjPanelLayout.setHorizontalGroup(
             EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
-                .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, EntradaDeVeiculosjPanelLayout.createSequentialGroup()
+                .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtCheckOutTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, EntradaDeVeiculosjPanelLayout.createSequentialGroup()
                         .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
                                 .addGap(109, 109, 109)
@@ -464,8 +446,8 @@ public class MainScreen extends javax.swing.JFrame {
                                 .addGap(63, 63, 63)
                                 .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
-                        .addContainerGap()
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, EntradaDeVeiculosjPanelLayout.createSequentialGroup()
+                        .addGap(0, 0, 0)
                         .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(FieldNotes, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
@@ -474,19 +456,8 @@ public class MainScreen extends javax.swing.JFrame {
                                     .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                         .addComponent(txtSaida)
                                         .addComponent(txtPlaca, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
-                                            .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                                    .addComponent(txtCheckOutTime, javax.swing.GroupLayout.DEFAULT_SIZE, 147, Short.MAX_VALUE)
-                                                    .addComponent(txtCheckInTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                                .addComponent(jLabel3)
-                                                .addComponent(jLabel5))
-                                            .addGap(0, 0, 0)
-                                            .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(txtCheckInDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(txtCheckOutDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(jLabel6)
-                                                .addComponent(jLabel4)))
+                                        .addComponent(jLabel3)
+                                        .addComponent(jLabel5)
                                         .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
                                             .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addComponent(jLabel2)
@@ -498,7 +469,8 @@ public class MainScreen extends javax.swing.JFrame {
                                     .addComponent(lblEntrada)
                                     .addComponent(lblNote)
                                     .addComponent(jLabel1))
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+                                .addGap(0, 0, Short.MAX_VALUE))))
+                    .addComponent(txtCheckInTime, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
         EntradaDeVeiculosjPanelLayout.setVerticalGroup(
@@ -510,7 +482,7 @@ public class MainScreen extends javax.swing.JFrame {
                 .addComponent(jLabel1)
                 .addGap(0, 0, 0)
                 .addComponent(txtPlaca, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(20, 20, 20)
                 .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
                         .addComponent(jLabel2)
@@ -520,52 +492,52 @@ public class MainScreen extends javax.swing.JFrame {
                             .addComponent(txtVaga, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(20, 20, 20)
                         .addComponent(lblEntrada)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel4))
                         .addGap(0, 0, 0)
-                        .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtCheckInTime, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCheckInDate, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(18, 18, 18)
-                        .addComponent(txtSaida)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel6))
-                        .addGap(0, 0, 0)
-                        .addGroup(EntradaDeVeiculosjPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtCheckOutTime, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCheckOutDate, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addComponent(lblNote)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(FieldNotes, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE))
-                    .addGroup(EntradaDeVeiculosjPanelLayout.createSequentialGroup()
-                        .addComponent(jLabel7)
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addComponent(jLabel3))
+                    .addComponent(jLabel7))
+                .addGap(0, 0, 0)
+                .addComponent(txtCheckInTime, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
+                .addComponent(txtSaida)
+                .addGap(0, 0, 0)
+                .addComponent(jLabel5)
+                .addGap(0, 0, 0)
+                .addComponent(txtCheckOutTime, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
+                .addComponent(lblNote)
+                .addGap(0, 0, 0)
+                .addComponent(FieldNotes, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20)
+                .addComponent(btnCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnSave, javax.swing.GroupLayout.DEFAULT_SIZE, 63, Short.MAX_VALUE))
         );
 
         EstacionamentojPanel.setBackground(new java.awt.Color(255, 255, 255));
 
         tableDriver.setBackground(new java.awt.Color(255, 255, 255));
+        tableDriver.setRowSelectionAllowed(true);
+        tableDriver.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         tableDriver.setForeground(new java.awt.Color(0, 133, 255));
         tableDriver.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "ID", "Placa", "Vaga", "Tipo Veículo", "Horário de Entrada", "Observação"
+                "Placa", "Vaga", "Tipo Veículo", "Horário de Entrada", "Observação"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tableDriver.setGridColor(new java.awt.Color(255, 255, 255));
         tableDriver.setSelectionBackground(new java.awt.Color(223, 249, 255));
-        tableDriver.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        tableDriver.setSelectionForeground(new java.awt.Color(0, 0, 0));
         scrPaneLista.setViewportView(tableDriver);
 
         lblEstacionamento.setBackground(new java.awt.Color(0, 133, 255));
@@ -581,7 +553,7 @@ public class MainScreen extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(EstacionamentojPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblEstacionamento)
-                    .addComponent(scrPaneLista, javax.swing.GroupLayout.DEFAULT_SIZE, 1025, Short.MAX_VALUE))
+                    .addComponent(scrPaneLista, javax.swing.GroupLayout.DEFAULT_SIZE, 1031, Short.MAX_VALUE))
                 .addContainerGap())
         );
         EstacionamentojPanelLayout.setVerticalGroup(
@@ -1074,53 +1046,75 @@ public class MainScreen extends javax.swing.JFrame {
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         try {
             // TODO add your handling code here:
-            Driver driver = new Driver();
-            /*driver.setCredential(null);
-            driver.setEmail(null);
-            driver.setName(null);
-            driver.setTelephone(null);*/
-            driver.setTicket(1);
-
-            ParkingSpace ps = new ParkingSpace();
-            ps.setDriver(driver);
-            ps.setNumber(Short.parseShort(txtVaga.getText()));
-            driver.addParkingSpace(ps);
-            ps.setArrivalTime(LocalDateTime.now());
-
-            Vehicle v = new Vehicle();
-            v.setNote(FieldNotes.getText());
-            v.setLicensePlate(txtPlaca.getText());
-            v.setDriver(driver);
-
+            ParkingSpaceDAO pDao = new ParkingSpaceDAO();
+            VehicleDAO vDao = new VehicleDAO();
             DriverDAO dDao = new DriverDAO();
+
+            Driver driver = new Driver();
+            Vehicle vehicle = new Vehicle();
+            ParkingSpace ps = new ParkingSpace();
+            
+            driver.addParkingSpace(ps);
+            driver.setTicket(1);
             dDao.saveOrUpdate(driver);
 
-            v.setId_driver(driver.getId());
+            vehicle.setLicensePlate(txtPlaca.getText());
+            vehicle.setNote(FieldNotes.getText());
+            switch (cBplace.getSelectedIndex()) {
+                case 0:
+                    vehicle.setType(Vehicle.TypeVehicle.CARRO);
+                    break;
+                case 1:
+                    vehicle.setType(Vehicle.TypeVehicle.MOTO);
+                    break;
+                case 2:
+                    vehicle.setType(Vehicle.TypeVehicle.BICICLETA);
+                    break;
+                case 3:
+                    vehicle.setType(Vehicle.TypeVehicle.CAMINHONETE);
+                    break;
+                case 4:
+                    vehicle.setType(Vehicle.TypeVehicle.CAMINHAO);
+                    break;
+                case 5:
+                    vehicle.setType(Vehicle.TypeVehicle.ONIBUS);
+                    break;
+                case 6:
+                    vehicle.setType(Vehicle.TypeVehicle.TANK);
+                    break;
+                case 7:
+                    vehicle.setType(Vehicle.TypeVehicle.HELICOPTER);
+                    break;
+            }
+            vehicle.setDriver(driver);
+            vehicle.setId_driver(driver.getId());
+            vDao.saveOrUpdate(vehicle);
+            
+            ps.setDriver(driver);
             ps.setId_driver(driver.getId());
-
-            VehicleDAO vDao = new VehicleDAO();
-            vDao.saveOrUpdate(v);
-
-            ParkingSpaceDAO pDao = new ParkingSpaceDAO();
+            ps.setNumber(Short.parseShort(txtVaga.getText()));
+            ps.setArrivalTime(txtCheckInTime.getText());
+            ps.setDepartureTime(txtCheckOutTime.getText());
             pDao.saveOrUpdate(ps);
         } catch (Exception ex) {
             Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        FillTable(tableDriver, "select * from vehicle");
+        btnCancelActionPerformed(null);
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void cBplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cBplaceActionPerformed
         // TODO add your handling code here:
-
     }//GEN-LAST:event_cBplaceActionPerformed
 
-    private void txtCheckOutDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCheckOutDateActionPerformed
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtCheckOutDateActionPerformed
-
-    private void txtCheckInDateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCheckInDateActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtCheckInDateActionPerformed
+        txtPlaca.setText(null);
+        FieldNotes.setText(null);
+        txtVaga.setText(null);
+        txtCheckInTime.setText(null);
+        txtCheckOutTime.setText(null);
+    }//GEN-LAST:event_btnCancelActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel EntradaDeVeiculosjPanel;
@@ -1147,9 +1141,7 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTable jTable2;
@@ -1179,9 +1171,7 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JScrollPane scrPnLista;
     private javax.swing.JTable tableDriver;
     private javax.swing.JTable tblLista;
-    private javax.swing.JTextField txtCheckInDate;
     private javax.swing.JTextField txtCheckInTime;
-    private javax.swing.JTextField txtCheckOutDate;
     private javax.swing.JTextField txtCheckOutTime;
     private javax.swing.JTextField txtPlaca;
     private javax.swing.JLabel txtSaida;

@@ -2,12 +2,24 @@ package br.edu.ifnmg.poo.vehicle;
 
 import br.edu.ifnmg.poo.driver.Driver;
 import br.edu.ifnmg.poo.entity.Entity;
+import static br.edu.ifnmg.poo.vehicle.Vehicle.TypeVehicle.CARRO;
 
 /**
  *
  * @author bvan &lt;Bruno Vinícius at ifnmg&gt;
  */
 public class Vehicle extends Entity {
+
+    public enum TypeVehicle {
+        CARRO,
+        MOTO,
+        BICICLETA,
+        CAMINHONETE,
+        CAMINHAO,
+        ONIBUS,
+        TANK,
+        HELICOPTER;
+    }
 
     private String licensePlate;
     private String note;
@@ -16,7 +28,6 @@ public class Vehicle extends Entity {
     private Long id_driver;
 
     public Vehicle() {
-        type = new TypeVehicle();
     }
 
     //<editor-fold defaultstate="collapsed" desc="GETTERS/SETTERS">
@@ -44,6 +55,37 @@ public class Vehicle extends Entity {
         }
     }
 
+    public void setType(TypeVehicle type) {
+        this.type = type;
+    }
+
+    public String getStringType() {
+        if (this.getType() == null) {
+            return "<not especified>";
+        }
+
+        switch (this.getType().ordinal()) {
+            case 0:
+                return "CARRO";
+            case 1:
+                return "MOTO";
+            case 2:
+                return "BICICLETA";
+            case 3:
+                return "CAMINHONETE";
+            case 4:
+                return "CAMINHAO";
+            case 5:
+                return "ONIBUS";
+            case 6:
+                return "TANK";
+            case 7:
+                return "HELICOPTER";
+        }
+
+        return null;
+    }
+
     public TypeVehicle getType() {
         return type;
     }
@@ -65,7 +107,6 @@ public class Vehicle extends Entity {
     }
 
     //</editor-fold>
-    
     @Override
     public String toString() {
         return "Vehicle{" + "licensePlate=" + licensePlate

@@ -1,6 +1,7 @@
 package br.edu.ifnmg.poo.vehicle;
 
 import br.edu.ifnmg.poo.repository.Dao;
+import br.edu.ifnmg.poo.vehicle.Vehicle.TypeVehicle;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -18,8 +19,8 @@ public class VehicleDAO extends Dao<Vehicle> {
     @Override
     public String getSaveStatment() {
         return "insert into " + TABLE
-                + " (id_driver, licensePlate, note, description, cost)"
-                + " values (?, ?, ?, ?, ?)";
+                + " (id_driver, licensePlate, note, typeVehicle)"
+                + " values (?, ?, ?, ?)";
     }
 
     @Override
@@ -28,8 +29,7 @@ public class VehicleDAO extends Dao<Vehicle> {
                 + " set id_driver = ?,"
                 + " licensePlate = ?,"
                 + " note = ?,"
-                + " description = ?,"
-                + " cost = ?"
+                + " typeVehicle = ?"
                 + " where id = ?";
     }
 
@@ -39,11 +39,35 @@ public class VehicleDAO extends Dao<Vehicle> {
             pstmt.setLong(1, e.getId_driver());
             pstmt.setString(2, e.getLicensePlate());
             pstmt.setString(3, e.getNote());
-            pstmt.setString(4, e.getType().getDescription());
-            pstmt.setBigDecimal(5, e.getType().getCost());
+            switch (e.getType()) {
+                case CARRO -> {
+                    pstmt.setString(4, "CARRO");
+                }
+                case MOTO -> {
+                    pstmt.setString(4, "MOTO");
+                }
+                case BICICLETA -> {
+                    pstmt.setString(4, "BICICLETA");
+                }
+                case CAMINHONETE -> {
+                    pstmt.setString(4, "CAMINHONETE");
+                }
+                case CAMINHAO -> {
+                    pstmt.setString(4, "CAMINHAO");
+                }
+                case ONIBUS -> {
+                    pstmt.setString(4, "ONIBUS");
+                }
+                case TANK -> {
+                    pstmt.setString(4, "TANK");
+                }
+                case HELICOPTER -> {
+                    pstmt.setString(4, "HELICOPTER");
+                }
+            }
 
             if (e.getId() != null) {
-                pstmt.setLong(6, e.getId());
+                pstmt.setLong(5, e.getId());
             }
         } catch (SQLException ex) {
             Logger.getLogger(VehicleDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -52,8 +76,9 @@ public class VehicleDAO extends Dao<Vehicle> {
 
     @Override
     public String getFindByIdStatment() {
-        return "select id, id_driver, licensePlate,"
-                + " note, description, cost"
+        return "select id, id_driver,"
+                + " licensePlate,"
+                + " note, typeVehicle"
                 + " from " + TABLE
                 + " where id = ?";
     }
@@ -61,7 +86,7 @@ public class VehicleDAO extends Dao<Vehicle> {
     @Override
     public String getFindAllStatment() {
         return "select id, id_driver, licensePlate,"
-                + " note, description, cost"
+                + " note, typeVehicle"
                 + " from " + TABLE;
     }
 
@@ -80,8 +105,9 @@ public class VehicleDAO extends Dao<Vehicle> {
             vehicle.setId_driver(resultSet.getLong("id_driver"));
             vehicle.setLicensePlate(resultSet.getString("licensePlate"));
             vehicle.setNote(resultSet.getString("note"));
-            vehicle.getType().setDescription(resultSet.getString("description"));
-            vehicle.getType().setCost(resultSet.getBigDecimal("cost"));
+            vehicle.setType(TypeVehicle.valueOf(resultSet.getString("typeVehicle")));
+            /*vehicle.getType().setDescription(resultSet.getString("description"));
+            vehicle.getType().setCost(resultSet.getBigDecimal("cost"));*/
 
         } catch (SQLException ex) {
             Logger.getLogger(VehicleDAO.class.getName()).log(Level.SEVERE, null, ex);

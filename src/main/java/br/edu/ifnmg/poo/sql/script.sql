@@ -11,8 +11,8 @@ id bigint unsigned PRIMARY KEY AUTO_INCREMENT,
 id_driver bigint unsigned,
 licensePlate varchar(8) NOT NULL,
 note varchar(500),
-description varchar(500),
-cost decimal(10,2),
+typeVehicle ENUM('CARRO','MOTO','BICICLETA',
+'CAMINHONETE','CAMINHAO','ONIBUS','TANK','HELICOPTER') NOT NULL,
 FOREIGN KEY(id_driver) REFERENCES Driver(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -20,8 +20,8 @@ create table ParkingSpace (
 id bigint unsigned PRIMARY KEY AUTO_INCREMENT,
 id_driver bigint unsigned,
 number smallint unsigned,
-arrivalTime DATETIME,
-departureTime DATETIME,
+arrivalTime varchar(10),
+departureTime varchar(10),
 FOREIGN KEY(id_driver) REFERENCES Driver(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 

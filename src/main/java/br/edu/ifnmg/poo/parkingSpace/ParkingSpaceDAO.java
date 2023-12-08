@@ -39,8 +39,8 @@ public class ParkingSpaceDAO extends Dao<ParkingSpace> {
         try {
             pstmt.setLong(1, e.getId_driver());
             pstmt.setLong(2, e.getNumber());
-            pstmt.setString(3, e.getArrivalTime().toString());
-            pstmt.setString(4, e.getArrivalTime().toString());
+            pstmt.setString(3, e.getArrivalTime());
+            pstmt.setString(4, e.getDepartureTime());
 
             if (e.getId() != null) {
                 pstmt.setLong(5, e.getId());
@@ -77,8 +77,8 @@ public class ParkingSpaceDAO extends Dao<ParkingSpace> {
             ps.setId(resultSet.getLong("id"));
             ps.setId_driver(resultSet.getLong("id_driver"));
             ps.setNumber(resultSet.getShort("number"));
-            ps.setArrivalTime(resultSet.getObject("arrivalTime", LocalDateTime.class));
-            ps.setDepartureTime(resultSet.getObject("departureTime", LocalDateTime.class));
+            ps.setArrivalTime(resultSet.getString("arrivalTime"));
+            ps.setDepartureTime(resultSet.getString("departureTime"));
 
         } catch (SQLException ex) {
             Logger.getLogger(ParkingSpaceDAO.class.getName()).log(Level.SEVERE, null, ex);

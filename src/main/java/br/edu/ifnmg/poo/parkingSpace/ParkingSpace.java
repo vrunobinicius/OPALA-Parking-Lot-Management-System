@@ -11,8 +11,8 @@ import java.time.LocalDateTime;
 public class ParkingSpace extends Entity {
 
     private short number;
-    private LocalDateTime arrivalTime;
-    private LocalDateTime departureTime;
+    private String arrivalTime;
+    private String departureTime;
     private Driver driver;
     private Long id_driver;
 
@@ -28,19 +28,19 @@ public class ParkingSpace extends Entity {
         this.number = number;
     }
 
-    public LocalDateTime getArrivalTime() {
+    public String getArrivalTime() {
         return arrivalTime;
     }
 
-    public void setArrivalTime(LocalDateTime arrivalTime) {
+    public void setArrivalTime(String arrivalTime) {
         this.arrivalTime = arrivalTime;
     }
 
-    public LocalDateTime getDepartureTime() {
+    public String getDepartureTime() {
         return departureTime;
     }
 
-    public void setDepartureTime(LocalDateTime departureTime) {
+    public void setDepartureTime(String departureTime) {
         this.departureTime = departureTime;
     }
 
@@ -63,12 +63,11 @@ public class ParkingSpace extends Entity {
 
     @Override
     public String toString() {
-        return "ParkingSpace{" + "number=" + number 
-                + ", arrivalTime=" + arrivalTime 
-                + ", departureTime=" + departureTime 
+        return "ParkingSpace{" + "number=" + number
+                + ", arrivalTime=" + arrivalTime
+                + ", departureTime=" + departureTime
                 + ", driver=" + driver
                 + ", id_driver=" + id_driver + '}';
     }
-    
-    
+
 }
