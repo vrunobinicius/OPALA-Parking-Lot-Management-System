@@ -17,6 +17,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -64,6 +66,8 @@ public class MainScreen extends javax.swing.JFrame {
         
         FillTable(tableDriver);
         FillCbPlaceComboBox();
+        setCheckInTimeToNow();
+
     }
 
     public MainScreen(Credential credential) {
@@ -166,7 +170,6 @@ public class MainScreen extends javax.swing.JFrame {
         }
     }
 
-
     public void SetTxtVagaDefaultValue(int firstAvailableSpot) {
         String firstAvailableSpotStr = String.valueOf(firstAvailableSpot);
         txtVaga.setText(firstAvailableSpotStr);
@@ -187,6 +190,36 @@ public class MainScreen extends javax.swing.JFrame {
         });
     }
 
+    public final void setCheckInTimeToNow() {
+        System.out.println("Método setCheckInTimeToNow chamado.");
+
+        txtCheckInTime.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                System.out.println("Focus gained no txtCheckInTime.");
+
+                if ("  :  ".equals(txtCheckInTime.getText()) ) {
+                    // Set txtCheckInTime to now only if it's empty
+                    LocalTime horaAtual = LocalTime.now();
+                    DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm");
+                    String horaFormatada = horaAtual.format(formato);
+                    txtCheckInTime.setText(horaFormatada);
+
+                    System.out.println("Hora atual definida no txtCheckInTime: " + horaFormatada);
+                } else {
+                    System.out.println(">>>> txtCheckInTime.getText() -> " + txtCheckInTime.getText());
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                System.out.println("Focus lost no txtCheckInTime.");
+                // Você pode adicionar lógica aqui se necessário
+            }
+        });
+    }
+
+    
     public final void FillCbPlaceComboBox() {
         cBplace.addItem("CARRO");
         cBplace.addItem("MOTO");
@@ -494,7 +527,13 @@ public class MainScreen extends javax.swing.JFrame {
         } catch (java.text.ParseException ex) {
             ex.printStackTrace();
         }
+        txtCheckInTime.setToolTipText("");
         txtCheckInTime.setCaretColor(new java.awt.Color(75, 110, 175));
+        txtCheckInTime.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCheckInTimeActionPerformed(evt);
+            }
+        });
 
         txtCheckOutTime.setBackground(new java.awt.Color(255, 255, 255));
         txtCheckOutTime.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 133, 255)));
@@ -1188,6 +1227,10 @@ public class MainScreen extends javax.swing.JFrame {
     private void txtVagaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtVagaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtVagaActionPerformed
+
+    private void txtCheckInTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCheckInTimeActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCheckInTimeActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel EntradaDeVeiculosjPanel;
