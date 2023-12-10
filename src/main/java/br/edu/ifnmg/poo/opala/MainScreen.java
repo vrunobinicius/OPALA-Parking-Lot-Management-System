@@ -191,12 +191,10 @@ public class MainScreen extends javax.swing.JFrame {
     }
 
     public final void setCheckInTimeToNow() {
-        System.out.println("Método setCheckInTimeToNow chamado.");
 
         txtCheckInTime.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                System.out.println("Focus gained no txtCheckInTime.");
 
                 if ("  :  ".equals(txtCheckInTime.getText()) ) {
                     // Set txtCheckInTime to now only if it's empty
@@ -205,16 +203,12 @@ public class MainScreen extends javax.swing.JFrame {
                     String horaFormatada = horaAtual.format(formato);
                     txtCheckInTime.setText(horaFormatada);
 
-                    System.out.println("Hora atual definida no txtCheckInTime: " + horaFormatada);
                 } else {
-                    System.out.println(">>>> txtCheckInTime.getText() -> " + txtCheckInTime.getText());
                 }
             }
 
             @Override
             public void focusLost(FocusEvent e) {
-                System.out.println("Focus lost no txtCheckInTime.");
-                // Você pode adicionar lógica aqui se necessário
             }
         });
     }
