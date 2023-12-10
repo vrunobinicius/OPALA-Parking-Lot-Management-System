@@ -1,5 +1,6 @@
 package br.edu.ifnmg.poo.opala;
 
+import helper.UpperCaseDocument;
 import br.edu.ifnmg.poo.credential.Credential;
 import br.edu.ifnmg.poo.driver.Driver;
 import br.edu.ifnmg.poo.driver.DriverDAO;
@@ -505,6 +506,8 @@ public class MainScreen extends javax.swing.JFrame {
         jLabel7.setForeground(new java.awt.Color(0, 0, 0));
         jLabel7.setText("Tipo de Veículo");
 
+        UpperCaseDocument ucd = new UpperCaseDocument();
+        txtPlaca.setDocument(ucd);
         txtPlaca.setBackground(new java.awt.Color(255, 255, 255));
         txtPlaca.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 133, 255)));
         try {
