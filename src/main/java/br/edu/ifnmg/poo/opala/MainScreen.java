@@ -5,6 +5,7 @@ import br.edu.ifnmg.poo.driver.Driver;
 import br.edu.ifnmg.poo.driver.DriverDAO;
 import br.edu.ifnmg.poo.parkingSpace.ParkingSpace;
 import br.edu.ifnmg.poo.parkingSpace.ParkingSpaceDAO;
+import br.edu.ifnmg.poo.repository.DbConnection;
 import br.edu.ifnmg.poo.vehicle.Vehicle;
 import br.edu.ifnmg.poo.vehicle.VehicleDAO;
 import com.formdev.flatlaf.util.SystemInfo;
@@ -12,6 +13,11 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -50,7 +56,12 @@ public class MainScreen extends javax.swing.JFrame {
 
         DefaultTableModel model = (DefaultTableModel) tableDriver.getModel();
         tableDriver.setRowSorter(new TableRowSorter(model));
-        GetLastUsedParkingSpot();
+        try{
+            SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
+        } catch (SQLException e) {
+            return;
+        }
+        
         FillTable(tableDriver);
         FillCbPlaceComboBox();
     }
@@ -114,13 +125,55 @@ public class MainScreen extends javax.swing.JFrame {
         }
     }
     
-    public  void GetLastUsedParkingSpot() {
-        // SELECT MAX(number) FROM ParkingSpace;
-        txtVaga.setText("42");
+    public int GetNextFreeParkingSpot() throws SQLException {
+        int firstAvailableSpot = 1;
+        try {
+            Connection connection = DbConnection.getConnection();
+
+            // Recupere todas as vagas utilizadas
+            String usedSpotsQuery = "SELECT number FROM ParkingSpace";
+            try (PreparedStatement usedSpotsStatement = connection.prepareStatement(usedSpotsQuery)) {
+                try (ResultSet usedSpotsResult = usedSpotsStatement.executeQuery()) {
+
+                    // Armazene as vagas utilizadas em uma lista
+                    List<Integer> usedSpots = new ArrayList<>();
+                    while (usedSpotsResult.next()) {
+                        usedSpots.add(usedSpotsResult.getInt("number"));
+                    }
+
+                    // Encontre a primeira vaga livre
+                    
+                    for (int i = 1; i <= usedSpots.size(); i++) {
+                        if (!usedSpots.contains(i)) {
+                            firstAvailableSpot = i;
+                            break;
+                        }
+                    }
+                    
+                    // Se todas as vagas estão ocupadas, a próxima é a última utilizada + 1
+                    if (firstAvailableSpot == 1 && !usedSpots.isEmpty()) {
+                        firstAvailableSpot = usedSpots.get(usedSpots.size() - 1) + 1;
+                    }
+
+                    // Retorne o número da primeira vaga livre
+                    return firstAvailableSpot;
+                }
+            }
+        } catch (SQLException e) {
+            // Trate a exceção conforme necessário
+            e.printStackTrace(); // TODO: Melhorar isso aqui
+            return -1;
+        }
+    }
+
+
+    public void SetTxtVagaDefaultValue(int firstAvailableSpot) {
+        String firstAvailableSpotStr = String.valueOf(firstAvailableSpot);
+        txtVaga.setText(firstAvailableSpotStr);
         txtVaga.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
-                if (txtVaga.getText().equals("42")) {
+                if (txtVaga.getText().equals(firstAvailableSpotStr)) {
                     txtVaga.setText(""); // Limpar o texto padrão ao receber o foco
                 }
             }
@@ -128,7 +181,7 @@ public class MainScreen extends javax.swing.JFrame {
             @Override
             public void focusLost(FocusEvent e) {
                 if (txtVaga.getText().isEmpty()) {
-                    txtVaga.setText("42"); // Restaurar o texto padrão se o campo estiver vazio
+                    txtVaga.setText(firstAvailableSpotStr); // Restaurar o texto padrão se o campo estiver vazio
                 }
             }
         });
@@ -1064,6 +1117,12 @@ public class MainScreen extends javax.swing.JFrame {
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         try {
             // TODO add your handling code here:
+            try{
+                SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
+            } catch (SQLException e) {
+                return;
+            }
+            
             ParkingSpaceDAO pDao = new ParkingSpaceDAO();
             VehicleDAO vDao = new VehicleDAO();
             DriverDAO dDao = new DriverDAO();
@@ -1118,6 +1177,7 @@ public class MainScreen extends javax.swing.JFrame {
             Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
         FillTable(tableDriver);
+        
         btnCancelActionPerformed(null);
     }//GEN-LAST:event_btnSaveActionPerformed
 
