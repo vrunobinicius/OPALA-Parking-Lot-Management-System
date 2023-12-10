@@ -10,6 +10,8 @@ import br.edu.ifnmg.poo.vehicle.VehicleDAO;
 import com.formdev.flatlaf.util.SystemInfo;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -48,7 +50,8 @@ public class MainScreen extends javax.swing.JFrame {
 
         DefaultTableModel model = (DefaultTableModel) tableDriver.getModel();
         tableDriver.setRowSorter(new TableRowSorter(model));
-        FillTable(tableDriver, "select * from vehicle");
+        GetLastUsedParkingSpot();
+        FillTable(tableDriver);
         FillCbPlaceComboBox();
     }
 
@@ -88,7 +91,7 @@ public class MainScreen extends javax.swing.JFrame {
         lastClickedButton = button;
     }
 
-    public void FillTable(JTable table, String Query) {
+    public final void FillTable(JTable table) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setNumRows(0);
 
@@ -110,8 +113,28 @@ public class MainScreen extends javax.swing.JFrame {
             }
         }
     }
+    
+    public  void GetLastUsedParkingSpot() {
+        // SELECT MAX(number) FROM ParkingSpace;
+        txtVaga.setText("42");
+        txtVaga.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (txtVaga.getText().equals("42")) {
+                    txtVaga.setText(""); // Limpar o texto padrão ao receber o foco
+                }
+            }
 
-    public void FillCbPlaceComboBox() {
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (txtVaga.getText().isEmpty()) {
+                    txtVaga.setText("42"); // Restaurar o texto padrão se o campo estiver vazio
+                }
+            }
+        });
+    }
+
+    public final void FillCbPlaceComboBox() {
         cBplace.addItem("CARRO");
         cBplace.addItem("MOTO");
         cBplace.addItem("BICICLETA");
@@ -325,6 +348,11 @@ public class MainScreen extends javax.swing.JFrame {
         txtVaga.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 133, 255), 1, true));
         txtVaga.setCaretColor(new java.awt.Color(157, 230, 178));
         txtVaga.setPreferredSize(new java.awt.Dimension(65, 25));
+        txtVaga.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtVagaActionPerformed(evt);
+            }
+        });
 
         cBplace.setBackground(new java.awt.Color(255, 255, 255));
         cBplace.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
@@ -1089,13 +1117,17 @@ public class MainScreen extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
-        FillTable(tableDriver, "select * from vehicle");
+        FillTable(tableDriver);
         btnCancelActionPerformed(null);
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void cBplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cBplaceActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cBplaceActionPerformed
+
+    private void txtVagaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtVagaActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtVagaActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel EntradaDeVeiculosjPanel;
