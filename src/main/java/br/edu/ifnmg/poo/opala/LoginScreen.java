@@ -4,11 +4,8 @@ import br.edu.ifnmg.poo.credential.Credential;
 import br.edu.ifnmg.poo.credential.CredentialDAO;
 import br.edu.ifnmg.poo.user.User;
 import com.formdev.flatlaf.util.SystemInfo;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.Timer;
 import osSpecific.OSValidator;
 
 /**
