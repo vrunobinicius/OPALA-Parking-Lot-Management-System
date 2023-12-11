@@ -1,6 +1,6 @@
 package br.edu.ifnmg.poo.opala;
 
-import helper.UpperCaseDocument;
+import br.edu.ifnmg.poo.helper.UpperCaseDocument;
 import br.edu.ifnmg.poo.credential.Credential;
 import br.edu.ifnmg.poo.driver.Driver;
 import br.edu.ifnmg.poo.driver.DriverDAO;
