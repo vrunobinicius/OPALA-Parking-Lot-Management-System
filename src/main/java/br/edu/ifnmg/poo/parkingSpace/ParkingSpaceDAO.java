@@ -70,7 +70,7 @@ public class ParkingSpaceDAO extends Dao<ParkingSpace> {
         return "delete from " + TABLE + " where id = ?";
     }
 
-    public ParkingSpace findByLicensePlate(Long number) {
+    public ParkingSpace findByLicensePlate(short number) {
 
         try (PreparedStatement preparedStatement
                 = DbConnection.getConnection().prepareStatement( 
@@ -79,7 +79,7 @@ public class ParkingSpaceDAO extends Dao<ParkingSpace> {
                 + " from " + TABLE + " where number = ?")) {
 
             // Assemble the SQL statement with the id
-            preparedStatement.setLong(1, number);
+            preparedStatement.setShort(1, number);
 
             // Performs the query on the database
             ResultSet resultSet = preparedStatement.executeQuery();
