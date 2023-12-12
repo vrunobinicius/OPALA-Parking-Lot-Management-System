@@ -1,6 +1,7 @@
 package br.edu.ifnmg.poo.parkingSpace;
 
 import br.edu.ifnmg.poo.repository.Dao;
+import br.edu.ifnmg.poo.repository.DbConnection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,6 +68,32 @@ public class ParkingSpaceDAO extends Dao<ParkingSpace> {
     @Override
     public String getDeleteStatement() {
         return "delete from " + TABLE + " where id = ?";
+    }
+
+    public ParkingSpace findByLicensePlate(Long number) {
+
+        try (PreparedStatement preparedStatement
+                = DbConnection.getConnection().prepareStatement( 
+                        "select id, id_driver, number, "
+                + "arrivalTime, departureTime"
+                + " from " + TABLE + " where number = ?")) {
+
+            // Assemble the SQL statement with the id
+            preparedStatement.setLong(1, number);
+
+            // Performs the query on the database
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // Returns the respective object if exists
+            if (resultSet.next()) {
+                return extractObject(resultSet);
+            }
+
+        } catch (Exception ex) {
+            System.out.println("Exception: " + ex);
+        }
+
+        return null;
     }
 
     @Override
