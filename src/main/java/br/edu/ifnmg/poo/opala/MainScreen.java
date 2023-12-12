@@ -1314,10 +1314,6 @@ public class MainScreen extends javax.swing.JFrame {
         String horaFormatada = horaAtual.format(formato);
         txtCheckOutTime.setText(horaFormatada);
 
-        // Set parking fee
-        LocalTime horaEntrada = LocalTime.parse(txtCheckInTime.getText());
-        Double fee = parkingFeeCalculator.calcularValor(horaEntrada, horaAtual);
-
         // Add a listener to set PaymentPanel visible ONLY when txtCheckOutTime or txtCheckInTime is a valid time
         DocumentListener documentListener = new DocumentListener() {
             private boolean isValidTime(String time) {
@@ -1329,6 +1325,7 @@ public class MainScreen extends javax.swing.JFrame {
                 String checkOut = txtCheckOutTime.getText();
                 if (isValidTime(checkIn) && isValidTime(checkOut)) {
                     LocalTime horaSaida = LocalTime.parse(checkOut);
+                    LocalTime horaEntrada = LocalTime.parse(checkIn);
                     Double fee = parkingFeeCalculator.calcularValor(horaEntrada, horaSaida);
                     txtParkingFee.setText(String.format("R$ %.2f", fee));
                     PaymentPanel.setVisible(true);
