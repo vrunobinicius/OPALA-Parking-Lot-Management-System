@@ -13,6 +13,8 @@ import br.edu.ifnmg.poo.vehicle.VehicleDAO;
 import com.formdev.flatlaf.util.SystemInfo;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.sql.Connection;
@@ -25,9 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JButton;
-import javax.swing.JTable;
-import javax.swing.ListSelectionModel;
+import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -193,7 +195,6 @@ public class MainScreen extends javax.swing.JFrame {
     }
 
     public final void setCheckInTimeToNow() {
-
         txtCheckInTime.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
@@ -1315,8 +1316,38 @@ public class MainScreen extends javax.swing.JFrame {
         // Set parking fee
         LocalTime horaEntrada = LocalTime.parse(txtCheckInTime.getText());
         Double fee = parkingFeeCalculator.calcularValor(horaEntrada, horaAtual);
-        txtParkingFee.setText(String.format("R$ %.2f", fee));
-        PaymentPanel.setVisible(true);
+
+        // Add a listener to set PaymentPanel visible ONLY when txtCheckOutTime or txtCheckInTime is a valid time
+        DocumentListener documentListener = new DocumentListener() {
+            private void update() {
+                if (txtCheckOutTime.getText().matches("([-1]?[0-9]|2[0-3]):[0-5][0-9]")) {
+                    LocalTime horaSaida = LocalTime.parse(txtCheckOutTime.getText());
+                    Double fee = parkingFeeCalculator.calcularValor(horaEntrada, horaSaida);
+                    txtParkingFee.setText(String.format("R$ %.2f", fee));
+                    PaymentPanel.setVisible(true);
+                } else {
+                    PaymentPanel.setVisible(false);
+                }
+            }
+
+            @Override
+            public void insertUpdate(DocumentEvent e) {
+                update();
+            }
+
+            @Override
+            public void removeUpdate(DocumentEvent e) {
+                update();
+            }
+
+            @Override
+            public void changedUpdate(DocumentEvent e) {
+                update();
+            }
+        };
+
+        txtCheckOutTime.getDocument().addDocumentListener(documentListener);
+        txtCheckInTime.getDocument().addDocumentListener(documentListener);
 
         
     }//GEN-LAST:event_tableDriverMouseClicked
