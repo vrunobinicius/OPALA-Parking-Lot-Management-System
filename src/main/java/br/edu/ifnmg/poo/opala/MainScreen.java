@@ -542,6 +542,7 @@ public class MainScreen extends javax.swing.JFrame {
         try {
             txtCheckOutTime.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
         } catch (java.text.ParseException ex) {
+            System.out.println("\nErro ao formatar hora\n");
             ex.printStackTrace();
         }
 
@@ -1319,9 +1320,15 @@ public class MainScreen extends javax.swing.JFrame {
 
         // Add a listener to set PaymentPanel visible ONLY when txtCheckOutTime or txtCheckInTime is a valid time
         DocumentListener documentListener = new DocumentListener() {
+            private boolean isValidTime(String time) {
+                return time.matches("([01]?[0-9]|2[0-3]):[0-5][0-9]");
+            }
+            
             private void update() {
-                if (txtCheckOutTime.getText().matches("([-1]?[0-9]|2[0-3]):[0-5][0-9]")) {
-                    LocalTime horaSaida = LocalTime.parse(txtCheckOutTime.getText());
+                String checkIn = txtCheckInTime.getText();
+                String checkOut = txtCheckOutTime.getText();
+                if (isValidTime(checkIn) && isValidTime(checkOut)) {
+                    LocalTime horaSaida = LocalTime.parse(checkOut);
                     Double fee = parkingFeeCalculator.calcularValor(horaEntrada, horaSaida);
                     txtParkingFee.setText(String.format("R$ %.2f", fee));
                     PaymentPanel.setVisible(true);
