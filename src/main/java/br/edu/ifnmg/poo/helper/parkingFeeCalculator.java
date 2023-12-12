@@ -17,7 +17,7 @@ public class parkingFeeCalculator {
     private static final int FRACIONAMENTO_MINUTOS = 15;
     private static final int MINUTOS_GRATIS = 5;
 
-    public double calcularValor(LocalTime entrada, LocalTime saida) {
+    public static double calcularValor(LocalTime entrada, LocalTime saida) {
         Duration duracao = Duration.between(entrada, saida);
         long minutosEstacionado = duracao.toMinutes();
 

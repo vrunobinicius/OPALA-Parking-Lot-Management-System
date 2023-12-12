@@ -1,9 +1,10 @@
 package br.edu.ifnmg.poo.opala;
 
-import br.edu.ifnmg.poo.helper.UpperCaseDocument;
+import br.edu.ifnmg.poo.helper.*;
 import br.edu.ifnmg.poo.credential.Credential;
 import br.edu.ifnmg.poo.driver.Driver;
 import br.edu.ifnmg.poo.driver.DriverDAO;
+import br.edu.ifnmg.poo.helper.JTableUtils;
 import br.edu.ifnmg.poo.parkingSpace.ParkingSpace;
 import br.edu.ifnmg.poo.parkingSpace.ParkingSpaceDAO;
 import br.edu.ifnmg.poo.repository.DbConnection;
@@ -678,6 +679,11 @@ public class MainScreen extends javax.swing.JFrame {
         tableDriver.setGridColor(new java.awt.Color(255, 255, 255));
         tableDriver.setSelectionBackground(new java.awt.Color(223, 249, 255));
         tableDriver.setSelectionForeground(new java.awt.Color(0, 0, 0));
+        tableDriver.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableDriverMouseClicked(evt);
+            }
+        });
         scrPaneLista.setViewportView(tableDriver);
 
         lblEstacionamento.setBackground(new java.awt.Color(0, 133, 255));
@@ -1270,6 +1276,50 @@ public class MainScreen extends javax.swing.JFrame {
     private void txtCheckInTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCheckInTimeActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCheckInTimeActionPerformed
+
+    private void tableDriverMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableDriverMouseClicked
+        DefaultTableModel model = (DefaultTableModel)tableDriver.getModel();
+        int selectedRowIndex = tableDriver.getSelectedRow();
+        
+        txtPlaca.setText(model.getValueAt(
+                selectedRowIndex, 
+                JTableUtils.getColumnIndexByName(
+                        tableDriver, "Placa")).toString());
+
+        txtVaga.setText(model.getValueAt(
+                selectedRowIndex,
+                JTableUtils.getColumnIndexByName(
+                        tableDriver, "Vaga")).toString());
+
+        cBplace.setSelectedItem(model.getValueAt(
+                selectedRowIndex,
+                JTableUtils.getColumnIndexByName(
+                        tableDriver, "Tipo Veículo")).toString());
+
+        txtCheckInTime.setText(model.getValueAt(
+                selectedRowIndex,
+                JTableUtils.getColumnIndexByName(
+                        tableDriver, "Horário de Entrada")).toString());
+
+        FieldNotes.setText(model.getValueAt(
+                selectedRowIndex,
+                JTableUtils.getColumnIndexByName(
+                        tableDriver, "Observação")).toString());
+
+        // Set checkout time to current time
+        LocalTime horaAtual = LocalTime.now();
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm");
+        String horaFormatada = horaAtual.format(formato);
+        txtCheckOutTime.setText(horaFormatada);
+
+        // Set parking fee
+        LocalTime horaEntrada = LocalTime.parse(txtCheckInTime.getText());
+        Double fee = parkingFeeCalculator.calcularValor(horaEntrada, horaAtual);
+        txtParkingFee.setText(String.format("R$ %.2f", fee));
+        PaymentPanel.setVisible(true);
+
+        
+    }//GEN-LAST:event_tableDriverMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel EntradaDeVeiculosjPanel;
