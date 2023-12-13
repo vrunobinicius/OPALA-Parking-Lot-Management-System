@@ -22,6 +22,7 @@ import java.sql.SQLException;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -140,14 +141,13 @@ public class MainScreen extends javax.swing.JFrame {
         });
     }
 
-    
     public int GetNextFreeParkingSpot() throws SQLException {
         int firstAvailableSpot = 1;
         try {
             Connection connection = DbConnection.getConnection();
 
             // Recupere todas as vagas utilizadas
-            String usedSpotsQuery = "SELECT number FROM ParkingSpace";
+            String usedSpotsQuery = "SELECT number FROM ParkingSpace ORDER BY number ASC";
             try (PreparedStatement usedSpotsStatement = connection.prepareStatement(usedSpotsQuery)) {
                 try (ResultSet usedSpotsResult = usedSpotsStatement.executeQuery()) {
 
@@ -158,17 +158,12 @@ public class MainScreen extends javax.swing.JFrame {
                     }
 
                     // Encontre a primeira vaga livre
-                    
-                    for (int i = 1; i <= usedSpots.size(); i++) {
+                    int maxSpot = usedSpots.isEmpty() ? 1 : Collections.max(usedSpots) + 1;
+                    for (int i = 1; i <= maxSpot; i++) {
                         if (!usedSpots.contains(i)) {
                             firstAvailableSpot = i;
                             break;
                         }
-                    }
-                    
-                    // Se todas as vagas estão ocupadas, a próxima é a última utilizada + 1
-                    if (firstAvailableSpot == 1 && !usedSpots.isEmpty()) {
-                        firstAvailableSpot = usedSpots.get(usedSpots.size() - 1) + 1;
                     }
 
                     // Retorne o número da primeira vaga livre
@@ -181,6 +176,7 @@ public class MainScreen extends javax.swing.JFrame {
             return -1;
         }
     }
+
 
     public void SetTxtVagaDefaultValue(int firstAvailableSpot) {
         String firstAvailableSpotStr = String.valueOf(firstAvailableSpot);
