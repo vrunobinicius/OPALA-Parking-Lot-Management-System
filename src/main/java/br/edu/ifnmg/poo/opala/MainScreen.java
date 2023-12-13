@@ -1237,20 +1237,16 @@ public class MainScreen extends javax.swing.JFrame {
             VehicleDAO vDao = new VehicleDAO();
             vDao.saveOrUpdate(v);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             throw e;
         }
     }
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         try {
-            try{
-                SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
-            } catch (SQLException e) {
-                return;
-            }
+            SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
 
             String licensePlate = txtPlaca.getText();
-            VehicleDAO vDao = new VehicleDAO();
 
             // Search if a vehicle with the same license plate is already parked
             ParkingSpace VerifyIfItsAlreadyParked = new ParkingSpaceDAO().findByLicensePlate(licensePlate);
@@ -1262,6 +1258,7 @@ public class MainScreen extends javax.swing.JFrame {
 
                 if (option == JOptionPane.YES_OPTION) {
                     // Set vehicle data
+                    VehicleDAO vDao = new VehicleDAO();
                     Vehicle vehicle = vDao.findByLicensePlate(licensePlate);
                     vehicle.setId_driver(VerifyIfItsAlreadyParked.getId_driver());
                     setAndSaveVehicle(vehicle);
@@ -1297,7 +1294,8 @@ public class MainScreen extends javax.swing.JFrame {
             pDao.saveOrUpdate(ps);
 
         } catch (Exception ex) {
-            Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
+            System.out.println(ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Erro ao salvar dados!", "Erro", JOptionPane.ERROR_MESSAGE);
         }
         fillTable(tableDriver);
 
