@@ -115,23 +115,31 @@ public class MainScreen extends javax.swing.JFrame {
         model.setNumRows(0);
 
         VehicleDAO vDao = new VehicleDAO();
-
         List<Vehicle> vList = vDao.findAll();
-        ParkingSpaceDAO pDao = new ParkingSpaceDAO();
 
         if (vList != null) {
             for (Vehicle v : vList) {
-                ParkingSpace p = pDao.findById(v.getId());
-                model.addRow(new Object[]{
-                    v.getLicensePlate(),
-                    p.getNumber(),
-                    v.getStringType(),
-                    p.getArrivalTime(),
-                    v.getNote()
-                });
+                ParkingSpace p = getParkingSpaceByVehicleId(v);
+                addRowToModel(model, v, p);
             }
         }
     }
+
+    private ParkingSpace getParkingSpaceByVehicleId(Vehicle v) {
+        ParkingSpaceDAO pDao = new ParkingSpaceDAO();
+        return pDao.findById(v.getId());
+    }
+
+    private void addRowToModel(DefaultTableModel model, Vehicle v, ParkingSpace p) {
+        model.addRow(new Object[]{
+                v.getLicensePlate(),
+                p.getNumber(),
+                v.getStringType(),
+                p.getArrivalTime(),
+                v.getNote()
+        });
+    }
+
     
     public int GetNextFreeParkingSpot() throws SQLException {
         int firstAvailableSpot = 1;
@@ -1208,6 +1216,14 @@ public class MainScreen extends javax.swing.JFrame {
             } catch (SQLException e) {
                 return;
             }
+
+            String licensePlate = txtPlaca.getText();
+            // Search if a vehicle with the same license plate is already parked
+            ParkingSpace VerifyIfItsAlreadyParked = new ParkingSpaceDAO().findByLicensePlate(licensePlate);
+            if (VerifyIfItsAlreadyParked != null) {
+                JOptionPane.showMessageDialog(this, "Veículo já estacionado!");
+                return;
+            }
             
             ParkingSpaceDAO pDao = new ParkingSpaceDAO();
             VehicleDAO vDao = new VehicleDAO();
@@ -1221,7 +1237,7 @@ public class MainScreen extends javax.swing.JFrame {
             driver.setTicket(1);
             dDao.saveOrUpdate(driver);
 
-            vehicle.setLicensePlate(txtPlaca.getText());
+            vehicle.setLicensePlate(licensePlate);
             vehicle.setNote(FieldNotes.getText());
             switch (cBplace.getSelectedIndex()) {
                 case 0:
@@ -1249,6 +1265,7 @@ public class MainScreen extends javax.swing.JFrame {
                 vehicle.setType(Vehicle.TypeVehicle.HELICOPTER);
                 break;
             }
+
             vehicle.setDriver(driver);
             vehicle.setId_driver(driver.getId());
             vDao.saveOrUpdate(vehicle);
@@ -1259,6 +1276,8 @@ public class MainScreen extends javax.swing.JFrame {
             ps.setArrivalTime(txtCheckInTime.getText());
             ps.setDepartureTime(txtCheckOutTime.getText());
             pDao.saveOrUpdate(ps);
+
+
         } catch (Exception ex) {
             Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
         }

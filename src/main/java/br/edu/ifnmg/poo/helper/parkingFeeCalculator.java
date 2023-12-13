@@ -5,7 +5,7 @@ import java.time.Duration;
 
 public class parkingFeeCalculator {
 
-    private static final Double VALOR_HORA = 6.0;
+    private static final Double VALOR_HORA = 6.0; // TODO: valores diferentes para cada tipo de veículo
     private static final int FRACIONAMENTO_MINUTOS = 15;
     private static final int MINUTOS_GRATIS = 5;
 

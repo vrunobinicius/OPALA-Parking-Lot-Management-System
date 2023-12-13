@@ -1,6 +1,7 @@
 package br.edu.ifnmg.poo.vehicle;
 
 import br.edu.ifnmg.poo.repository.Dao;
+import br.edu.ifnmg.poo.repository.DbConnection;
 import br.edu.ifnmg.poo.vehicle.Vehicle.TypeVehicle;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -81,6 +82,36 @@ public class VehicleDAO extends Dao<Vehicle> {
                 + " note, typeVehicle"
                 + " from " + TABLE
                 + " where id = ?";
+    }
+
+    public String getFindByLicensePlateStatement() {
+        return "select id, id_driver,"
+                + " licensePlate,"
+                + " note, typeVehicle"
+                + " from " + TABLE
+                + " where licensePlate = ?";
+    }
+
+    public Vehicle findByLicensePlate(String licensePlate) {
+        try (PreparedStatement preparedStatement
+                = DbConnection.getConnection().prepareStatement(getFindByLicensePlateStatement())) {
+
+            // Assemble the SQL statement with the id
+            preparedStatement.setString(1, licensePlate);
+
+            // Performs the query on the database
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // Returns the respective object if exists
+            if (resultSet.next()) {
+                return extractObject(resultSet);
+            }
+
+        } catch (Exception ex) {
+            System.out.println("Exception: " + ex);
+        }
+
+        return null;
     }
 
     @Override

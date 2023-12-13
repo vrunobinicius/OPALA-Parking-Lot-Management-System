@@ -70,16 +70,17 @@ public class ParkingSpaceDAO extends Dao<ParkingSpace> {
         return "delete from " + TABLE + " where id = ?";
     }
 
-    public ParkingSpace findByLicensePlate(short number) {
-
+    public ParkingSpace findByLicensePlate(String licensePlate) {
         try (PreparedStatement preparedStatement
-                = DbConnection.getConnection().prepareStatement( 
-                        "select id, id_driver, number, "
-                + "arrivalTime, departureTime"
-                + " from " + TABLE + " where number = ?")) {
+                     = DbConnection.getConnection().prepareStatement(
+                "select P.id, P.id_driver, P.number, "
+                        + "P.arrivalTime, P.departureTime"
+                        + " from ParkingSpace P"
+                        + " inner join Vehicle V on P.id_driver = V.id_driver"
+                        + " where V.licensePlate = ?")) {
 
-            // Assemble the SQL statement with the id
-            preparedStatement.setShort(1, number);
+            // Assemble the SQL statement with the licensePlate
+            preparedStatement.setString(1, licensePlate);
 
             // Performs the query on the database
             ResultSet resultSet = preparedStatement.executeQuery();
@@ -95,6 +96,7 @@ public class ParkingSpaceDAO extends Dao<ParkingSpace> {
 
         return null;
     }
+
 
     @Override
     public ParkingSpace extractObject(ResultSet resultSet) {
