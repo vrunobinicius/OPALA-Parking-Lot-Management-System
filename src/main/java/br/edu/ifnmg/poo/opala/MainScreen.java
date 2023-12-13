@@ -13,8 +13,6 @@ import br.edu.ifnmg.poo.vehicle.VehicleDAO;
 import com.formdev.flatlaf.util.SystemInfo;
 import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.sql.Connection;
@@ -68,7 +66,7 @@ public class MainScreen extends javax.swing.JFrame {
             return;
         }
         
-        FillTable(tableDriver);
+        fillTable(tableDriver);
         FillCbPlaceComboBox();
         setCheckInTimeToNow();
 
@@ -110,7 +108,7 @@ public class MainScreen extends javax.swing.JFrame {
         lastClickedButton = button;
     }
 
-    public final void FillTable(JTable table) {
+    public final void fillTable(JTable table) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setNumRows(0);
 
@@ -119,8 +117,10 @@ public class MainScreen extends javax.swing.JFrame {
 
         if (vList != null) {
             for (Vehicle v : vList) {
-                ParkingSpace p = getParkingSpaceByVehicleId(v);
-                addRowToModel(model, v, p);
+                if (v != null){
+                    ParkingSpace p = getParkingSpaceByVehicleId(v);
+                    addRowToModel(model, v, p);
+                }
             }
         }
     }
@@ -529,6 +529,7 @@ public class MainScreen extends javax.swing.JFrame {
             ex.printStackTrace();
         }
         txtPlaca.setFont(new java.awt.Font("Helvetica Neue", 0, 36)); // NOI18N
+        txtPlaca.setMargin(new java.awt.Insets(12, 16, 12, 16));
 
         txtCheckInTime.setBackground(new java.awt.Color(255, 255, 255));
         txtCheckInTime.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 133, 255)));
@@ -550,7 +551,6 @@ public class MainScreen extends javax.swing.JFrame {
         try {
             txtCheckOutTime.setFormatterFactory(new javax.swing.text.DefaultFormatterFactory(new javax.swing.text.MaskFormatter("##:##")));
         } catch (java.text.ParseException ex) {
-            System.out.println("\nErro ao formatar hora\n");
             ex.printStackTrace();
         }
 
@@ -1218,11 +1218,31 @@ public class MainScreen extends javax.swing.JFrame {
             }
 
             String licensePlate = txtPlaca.getText();
+
             // Search if a vehicle with the same license plate is already parked
             ParkingSpace VerifyIfItsAlreadyParked = new ParkingSpaceDAO().findByLicensePlate(licensePlate);
             if (VerifyIfItsAlreadyParked != null) {
-                JOptionPane.showMessageDialog(this, "Veículo já estacionado!");
-                return;
+                int option = JOptionPane.showOptionDialog(this, "Veículo já estacionado!", "Alerta",
+                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
+                        new Object[]{"Sobrescrever", "Cancelar"}, "Sobrescrever");
+
+                if (option == JOptionPane.YES_OPTION) {
+                    // Lógica para Sobrescrever
+                    System.out.println("Option selected: Overwrite");
+
+                    // Delete the parking space, vehicle and driver
+                    ParkingSpaceDAO psDao = new ParkingSpaceDAO();
+                    VehicleDAO vDao = new VehicleDAO();
+                    DriverDAO dDao = new DriverDAO();
+
+                    ParkingSpace ps = psDao.findByLicensePlate(licensePlate);
+                    Vehicle v = vDao.findByLicensePlate(licensePlate);
+                    Driver d = dDao.findById(v.getId_driver());
+
+                    psDao.delete(ps.getId());
+                    vDao.delete(v.getId());
+                    dDao.delete(d.getId());
+                } else return;
             }
             
             ParkingSpaceDAO pDao = new ParkingSpaceDAO();
@@ -1281,7 +1301,7 @@ public class MainScreen extends javax.swing.JFrame {
         } catch (Exception ex) {
             Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
-        FillTable(tableDriver);
+        fillTable(tableDriver);
         
         btnCancelActionPerformed(null);
     }//GEN-LAST:event_btnSaveActionPerformed
