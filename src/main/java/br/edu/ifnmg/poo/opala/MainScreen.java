@@ -1204,8 +1204,44 @@ public class MainScreen extends javax.swing.JFrame {
         txtCheckOutTime.setText(null);
     }//GEN-LAST:event_btnCancelActionPerformed
 
+    private void setAndSaveVehicle(Vehicle v) throws Exception {
+        try {
+            v.setNote(FieldNotes.getText());
+            v.setLicensePlate(txtPlaca.getText());
+            switch (cBplace.getSelectedIndex()) {
+                case 0:
+                    v.setType(Vehicle.TypeVehicle.CARRO);
+                    break;
+                case 1:
+                    v.setType(Vehicle.TypeVehicle.MOTO);
+                    break;
+                case 2:
+                    v.setType(Vehicle.TypeVehicle.BICICLETA);
+                    break;
+                case 3:
+                    v.setType(Vehicle.TypeVehicle.CAMINHONETE);
+                    break;
+                case 4:
+                    v.setType(Vehicle.TypeVehicle.CAMINHAO);
+                    break;
+                case 5:
+                    v.setType(Vehicle.TypeVehicle.ONIBUS);
+                    break;
+                case 6:
+                    v.setType(Vehicle.TypeVehicle.TANK);
+                    break;
+                case 7:
+                    v.setType(Vehicle.TypeVehicle.HELICOPTER);
+                    break;
+            }
+            VehicleDAO vDao = new VehicleDAO();
+            vDao.saveOrUpdate(v);
+        } catch (Exception e) {
+            throw e;
+        }
+    }
+
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
-        // ⚠️ TODO: This piece of code is total garbage, it needs to be refactored ⚠️
         try {
             try{
                 SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
@@ -1214,106 +1250,51 @@ public class MainScreen extends javax.swing.JFrame {
             }
 
             String licensePlate = txtPlaca.getText();
+            VehicleDAO vDao = new VehicleDAO();
 
             // Search if a vehicle with the same license plate is already parked
             ParkingSpace VerifyIfItsAlreadyParked = new ParkingSpaceDAO().findByLicensePlate(licensePlate);
             if (VerifyIfItsAlreadyParked != null) {
+                // If it is, ask if the user wants to overwrite the data
                 int option = JOptionPane.showOptionDialog(this, "Veículo já estacionado!", "Alerta",
                         JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
                         new Object[]{"Sobrescrever", "Cancelar"}, "Sobrescrever");
 
                 if (option == JOptionPane.YES_OPTION) {
-                    // Lógica para Sobrescrever (usando o saveOrUpdate)
-                    System.out.println("Sobrescrever");
-                    VehicleDAO vDao = new VehicleDAO();
+                    // Set vehicle data
                     Vehicle vehicle = vDao.findByLicensePlate(licensePlate);
-                    vehicle.setNote(FieldNotes.getText());
-                    vehicle.setLicensePlate(licensePlate);
                     vehicle.setId_driver(VerifyIfItsAlreadyParked.getId_driver());
-                    switch (cBplace.getSelectedIndex()) {
-                        case 0:
-                        vehicle.setType(Vehicle.TypeVehicle.CARRO);
-                        break;
-                        case 1:
-                        vehicle.setType(Vehicle.TypeVehicle.MOTO);
-                        break;
-                        case 2:
-                        vehicle.setType(Vehicle.TypeVehicle.BICICLETA);
-                        break;
-                        case 3:
-                        vehicle.setType(Vehicle.TypeVehicle.CAMINHONETE);
-                        break;
-                        case 4:
-                        vehicle.setType(Vehicle.TypeVehicle.CAMINHAO);
-                        break;
-                        case 5:
-                        vehicle.setType(Vehicle.TypeVehicle.ONIBUS);
-                        break;
-                        case 6:
-                        vehicle.setType(Vehicle.TypeVehicle.TANK);
-                        break;
-                        case 7:
-                        vehicle.setType(Vehicle.TypeVehicle.HELICOPTER);
-                        break;
-                    }
-                    vDao.saveOrUpdate(vehicle);
+                    setAndSaveVehicle(vehicle);
                 }
                 fillTable(tableDriver);
                 return;
             }
 
-            ParkingSpaceDAO pDao = new ParkingSpaceDAO();
-            VehicleDAO vDao = new VehicleDAO();
-            DriverDAO dDao = new DriverDAO();
-
-            Driver driver = new Driver();
-            Vehicle vehicle = new Vehicle();
             ParkingSpace ps = new ParkingSpace();
-
+            // Set driver data
+            Driver driver = new Driver();
             driver.addParkingSpace(ps);
             driver.setTicket(1);
+            // Save driver
+            DriverDAO dDao = new DriverDAO();
             dDao.saveOrUpdate(driver);
 
-            vehicle.setLicensePlate(licensePlate);
-            vehicle.setNote(FieldNotes.getText());
-            switch (cBplace.getSelectedIndex()) {
-                case 0:
-                vehicle.setType(Vehicle.TypeVehicle.CARRO);
-                break;
-                case 1:
-                vehicle.setType(Vehicle.TypeVehicle.MOTO);
-                break;
-                case 2:
-                vehicle.setType(Vehicle.TypeVehicle.BICICLETA);
-                break;
-                case 3:
-                vehicle.setType(Vehicle.TypeVehicle.CAMINHONETE);
-                break;
-                case 4:
-                vehicle.setType(Vehicle.TypeVehicle.CAMINHAO);
-                break;
-                case 5:
-                vehicle.setType(Vehicle.TypeVehicle.ONIBUS);
-                break;
-                case 6:
-                vehicle.setType(Vehicle.TypeVehicle.TANK);
-                break;
-                case 7:
-                vehicle.setType(Vehicle.TypeVehicle.HELICOPTER);
-                break;
-            }
-
-            vehicle.setDriver(driver);
+            // Set vehicle data
+            Vehicle vehicle = new Vehicle();
             vehicle.setId_driver(driver.getId());
-            vDao.saveOrUpdate(vehicle);
+            vehicle.setDriver(driver);
+            // Save vehicle
+            setAndSaveVehicle(vehicle);
 
+            // Set parking space data
             ps.setDriver(driver);
             ps.setId_driver(driver.getId());
             ps.setNumber(Short.parseShort(txtVaga.getText()));
             ps.setArrivalTime(txtCheckInTime.getText());
             ps.setDepartureTime(txtCheckOutTime.getText());
+            // Save parking space
+            ParkingSpaceDAO pDao = new ParkingSpaceDAO();
             pDao.saveOrUpdate(ps);
-
 
         } catch (Exception ex) {
             Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
