@@ -1205,8 +1205,8 @@ public class MainScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        // ⚠️ TODO: This piece of code is total garbage, it needs to be refactored ⚠️
         try {
-            // TODO add your handling code here:
             try{
                 SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
             } catch (SQLException e) {
@@ -1223,24 +1223,45 @@ public class MainScreen extends javax.swing.JFrame {
                         new Object[]{"Sobrescrever", "Cancelar"}, "Sobrescrever");
 
                 if (option == JOptionPane.YES_OPTION) {
-                    // Lógica para Sobrescrever
-                    System.out.println("Option selected: Overwrite");
-
-                    // Delete the parking space, vehicle and driver
-                    ParkingSpaceDAO psDao = new ParkingSpaceDAO();
+                    // Lógica para Sobrescrever (usando o saveOrUpdate)
+                    System.out.println("Sobrescrever");
                     VehicleDAO vDao = new VehicleDAO();
-                    DriverDAO dDao = new DriverDAO();
-
-                    ParkingSpace ps = psDao.findByLicensePlate(licensePlate);
-                    Vehicle v = vDao.findByLicensePlate(licensePlate);
-                    Driver d = dDao.findById(v.getId_driver());
-
-                    psDao.delete(ps.getId());
-                    vDao.delete(v.getId());
-                    dDao.delete(d.getId());
-                } else return;
+                    Vehicle vehicle = vDao.findByLicensePlate(licensePlate);
+                    vehicle.setNote(FieldNotes.getText());
+                    vehicle.setLicensePlate(licensePlate);
+                    vehicle.setId_driver(VerifyIfItsAlreadyParked.getId_driver());
+                    switch (cBplace.getSelectedIndex()) {
+                        case 0:
+                        vehicle.setType(Vehicle.TypeVehicle.CARRO);
+                        break;
+                        case 1:
+                        vehicle.setType(Vehicle.TypeVehicle.MOTO);
+                        break;
+                        case 2:
+                        vehicle.setType(Vehicle.TypeVehicle.BICICLETA);
+                        break;
+                        case 3:
+                        vehicle.setType(Vehicle.TypeVehicle.CAMINHONETE);
+                        break;
+                        case 4:
+                        vehicle.setType(Vehicle.TypeVehicle.CAMINHAO);
+                        break;
+                        case 5:
+                        vehicle.setType(Vehicle.TypeVehicle.ONIBUS);
+                        break;
+                        case 6:
+                        vehicle.setType(Vehicle.TypeVehicle.TANK);
+                        break;
+                        case 7:
+                        vehicle.setType(Vehicle.TypeVehicle.HELICOPTER);
+                        break;
+                    }
+                    vDao.saveOrUpdate(vehicle);
+                }
+                fillTable(tableDriver);
+                return;
             }
-            
+
             ParkingSpaceDAO pDao = new ParkingSpaceDAO();
             VehicleDAO vDao = new VehicleDAO();
             DriverDAO dDao = new DriverDAO();
@@ -1298,7 +1319,7 @@ public class MainScreen extends javax.swing.JFrame {
             Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
         fillTable(tableDriver);
-        
+
         btnCancelActionPerformed(null);
     }//GEN-LAST:event_btnSaveActionPerformed
 
