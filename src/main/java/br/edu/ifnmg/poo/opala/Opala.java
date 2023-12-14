@@ -49,8 +49,9 @@ public class Opala {
                 }
                 u.setCredential(c);
                 c.setUser(u);
-                cDao.saveOrUpdate(c);
                 uDao.saveOrUpdate(u);
+                c.setId_user(u.getId());
+                cDao.saveOrUpdate(c);
 
                 //Funcionário User: paulofilipe password: senha123
                 Credential c2 = new Credential();
@@ -72,8 +73,10 @@ public class Opala {
                 }
                 u2.setCredential(c2);
                 c2.setUser(u2);
-                cDao.saveOrUpdate(c2);
                 uDao.saveOrUpdate(u2);
+                c2.setId_user(u2.getId());
+                cDao.saveOrUpdate(c2);
+                
 
                 //Usuário user: isaiasvictor password: senha123
                 Credential c3 = new Credential();
@@ -95,8 +98,10 @@ public class Opala {
                 }
                 u3.setCredential(c3);
                 c3.setUser(u3);
-                cDao.saveOrUpdate(c3);
                 uDao.saveOrUpdate(u3);
+                c3.setId_user(u3.getId());
+                cDao.saveOrUpdate(c3);
+                
             }
 
             try {

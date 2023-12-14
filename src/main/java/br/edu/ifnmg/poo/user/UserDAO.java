@@ -1,5 +1,7 @@
 package br.edu.ifnmg.poo.user;
 
+import br.edu.ifnmg.poo.credential.Credential;
+import br.edu.ifnmg.poo.credential.CredentialDAO;
 import br.edu.ifnmg.poo.repository.Dao;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

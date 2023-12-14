@@ -116,6 +116,31 @@ public class MainScreen extends javax.swing.JFrame {
         lastClickedButton = button;
     }
 
+    private final void fillUserTable() {
+        DefaultTableModel model = (DefaultTableModel) userTable.getModel();
+        model.setNumRows(0);
+
+        UserDAO uDao = new UserDAO();
+        List<User> uList = uDao.findAll();
+        CredentialDAO c = new CredentialDAO();
+
+        if (uList != null) {
+            for (User u : uList) {
+                if (u != null) {
+                    u.setCredential(c.findById(u.getId()));
+                    model.addRow(new Object[]{
+                        u.getId(),
+                        u.getName(),
+                        u.getEmail(),
+                        u.getTelephone(),
+                        // Convert Credential ENUM to string
+                        u.getCredential().getType().toString()
+                    });
+                }
+            }
+        }
+    }
+
     private final void fillHomeTable(JTable table) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setNumRows(0);
@@ -324,7 +349,7 @@ public class MainScreen extends javax.swing.JFrame {
         pnlUser = new javax.swing.JPanel();
         lblUser = new javax.swing.JLabel();
         scrPaneLista2 = new javax.swing.JScrollPane();
-        jTable3 = new javax.swing.JTable();
+        userTable = new javax.swing.JTable();
         pnlSearchIconUser = new javax.swing.JPanel();
         lblSearchIconUser = new javax.swing.JLabel();
         txtSearchUser = new javax.swing.JTextField();
@@ -1055,29 +1080,29 @@ public class MainScreen extends javax.swing.JFrame {
         lblUser.setForeground(new java.awt.Color(0, 133, 255));
         lblUser.setText("USUÁRIO");
 
-        jTable3.setBackground(new java.awt.Color(255, 255, 255));
-        jTable3.setForeground(new java.awt.Color(0, 133, 255));
-        jTable3.setModel(new javax.swing.table.DefaultTableModel(
+        userTable.setBackground(new java.awt.Color(255, 255, 255));
+        userTable.setForeground(new java.awt.Color(0, 133, 255));
+        userTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
             },
             new String [] {
-                "id", "nome", "e-mail", "telefone"
+                "id", "Nome", "E-mail", "Telefone", "Nível de Acesso"
             }
         ));
-        jTable3.setGridColor(new java.awt.Color(255, 255, 255));
-        jTable3.setSelectionBackground(new java.awt.Color(223, 249, 255));
-        jTable3.setSelectionForeground(new java.awt.Color(255, 255, 255));
-        scrPaneLista2.setViewportView(jTable3);
+        userTable.setGridColor(new java.awt.Color(255, 255, 255));
+        userTable.setSelectionBackground(new java.awt.Color(223, 249, 255));
+        userTable.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        scrPaneLista2.setViewportView(userTable);
 
         pnlSearchIconUser.setBackground(new java.awt.Color(0, 133, 255));
 
@@ -1145,9 +1170,9 @@ public class MainScreen extends javax.swing.JFrame {
                     .addGroup(pnlUserLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(txtSearchUser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(pnlSearchIconUser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnAddUser, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnAddUser, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(10, 10, 10)
-                .addComponent(scrPaneLista2, javax.swing.GroupLayout.DEFAULT_SIZE, 591, Short.MAX_VALUE)
+                .addComponent(scrPaneLista2, javax.swing.GroupLayout.DEFAULT_SIZE, 593, Short.MAX_VALUE)
                 .addGap(50, 50, 50))
         );
 
@@ -1213,6 +1238,7 @@ public class MainScreen extends javax.swing.JFrame {
         // TODO add your handling code here:
         cardMainScreen.show(pnlMain, "User");
         changeColorButton(btnUser);
+        fillUserTable();
     }//GEN-LAST:event_btnUserActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
@@ -1569,12 +1595,14 @@ public class MainScreen extends javax.swing.JFrame {
                 UserDAO uDao = new UserDAO();
                 uDao.saveOrUpdate(u);
                 CredentialDAO cDao = new CredentialDAO();
+                c.setId_user(u.getId());
                 cDao.saveOrUpdate(c);
                 
             } catch (Exception ex) {
                 Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
+        fillUserTable();
     }//GEN-LAST:event_btnAddUserActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -1605,7 +1633,6 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JTable jTable2;
-    private javax.swing.JTable jTable3;
     private javax.swing.JLabel lblCaixa;
     private javax.swing.JLabel lblEntrada;
     private javax.swing.JLabel lblEstacionamento;
@@ -1640,5 +1667,6 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JTextField txtSearchSubscriber;
     private javax.swing.JTextField txtSearchUser;
     private javax.swing.JTextField txtVaga;
+    private javax.swing.JTable userTable;
     // End of variables declaration//GEN-END:variables
 }

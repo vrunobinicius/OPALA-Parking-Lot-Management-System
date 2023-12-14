@@ -28,14 +28,15 @@ public class CredentialDAO extends Dao<Credential> {
     @Override
     public String getSaveStatment() {
         return "insert into " + TABLE
-                + " (username, password, lastAccess, typeUser)"
-                + " values (?, MD5(?), ?, ?)";
+                + " (id_user, username, password, lastAccess, typeUser)"
+                + " values (?, ?, MD5(?), ?, ?)";
     }
 
     @Override
     public String getUpdateStatment() {
         return "update " + TABLE
-                + " set username = ?, password = MD5(?), "
+                + " set id_user = ?"
+                + "username = ?, password = MD5(?), "
                 + "lastAccess = ?, typeUser = ?"
                 + " where id = ?";
     }
@@ -43,25 +44,26 @@ public class CredentialDAO extends Dao<Credential> {
     @Override
     public void composeSaveOrUpdateStatement(PreparedStatement pstmt, Credential e) {
         try {
-            pstmt.setString(1, e.getUsername());
+            pstmt.setLong(1, e.getId_user());
+            pstmt.setString(2, e.getUsername());
             String password = e.getPassword() + SALT;
-            pstmt.setString(2, password);
-            pstmt.setObject(3, e.getLastAcces(), java.sql.Types.DATE);
+            pstmt.setString(3, password);
+            pstmt.setObject(4, e.getLastAcces(), java.sql.Types.DATE);
 
             switch (e.getType()) {
                 case ADMIN -> {
-                    pstmt.setString(4, "ADMIN");
+                    pstmt.setString(5, "ADMIN");
                 }
                 case OPERATOR -> {
-                    pstmt.setString(4, "OPERATOR");
+                    pstmt.setString(5, "OPERATOR");
                 }
                 case SUBSCRIBER -> {
-                    pstmt.setString(4, "SUBSCRIBER");
+                    pstmt.setString(5, "SUBSCRIBER");
                 }
             }
 
             if (e.getId() != null) {
-                pstmt.setLong(5, e.getId());
+                pstmt.setLong(6, e.getId());
             }
         } catch (SQLException ex) {
             Logger.getLogger(CredentialDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -70,14 +72,14 @@ public class CredentialDAO extends Dao<Credential> {
 
     @Override
     public String getFindByIdStatment() {
-        return "select id, username, password, "
+        return "select id, id_user, username, password, "
                 + "lastAccess, typeUser"
                 + " from " + TABLE + " where id = ?";
     }
 
     @Override
     public String getFindAllStatment() {
-        return "select id, username, password, "
+        return "select id, id_user, username, password, "
                 + "lastAccess, typeUser"
                 + " from " + TABLE;
     }
@@ -93,6 +95,7 @@ public class CredentialDAO extends Dao<Credential> {
         try {
             credential = new Credential();
             credential.setId(resultSet.getLong("id"));
+            credential.setId_user(resultSet.getLong("id_user"));
             credential.setUsername(resultSet.getString("username"));
             String password = resultSet.getString("password");
             credential.setPassword(password);
