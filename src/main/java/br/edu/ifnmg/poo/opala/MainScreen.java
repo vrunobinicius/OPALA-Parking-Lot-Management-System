@@ -70,7 +70,7 @@ public class MainScreen extends javax.swing.JFrame {
         DefaultTableModel model = (DefaultTableModel) parkedTable.getModel();
         parkedTable.setRowSorter(new TableRowSorter<>(model));
         try {
-            SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
+            setTxtVagaDefaultValue(getNextFreeParkingSpot());
         } catch (SQLException e) {
             return;
         }
@@ -208,7 +208,7 @@ public class MainScreen extends javax.swing.JFrame {
         return vDao.findById(p);
     }
 
-    public int GetNextFreeParkingSpot() throws SQLException {
+    public int getNextFreeParkingSpot() throws SQLException {
         int firstAvailableSpot = 1;
 
         try {
@@ -245,7 +245,7 @@ public class MainScreen extends javax.swing.JFrame {
         }
     }
 
-    public void SetTxtVagaDefaultValue(int firstAvailableSpot) {
+    public void setTxtVagaDefaultValue(int firstAvailableSpot) {
         String firstAvailableSpotStr = String.valueOf(firstAvailableSpot);
         txtVaga.setText(firstAvailableSpotStr);
     }
@@ -1264,7 +1264,7 @@ public class MainScreen extends javax.swing.JFrame {
         txtCheckOutTime.setText(null);
 
         try {
-            SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
+            setTxtVagaDefaultValue(getNextFreeParkingSpot());
         } catch (SQLException ex) {
             Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -1274,24 +1274,7 @@ public class MainScreen extends javax.swing.JFrame {
         try {
             v.setNote(FieldNotes.getText());
             v.setLicensePlate(txtPlaca.getText());
-            switch (cBplace.getSelectedIndex()) {
-                case 0 ->
-                    v.setType(Vehicle.TypeVehicle.CARRO);
-                case 1 ->
-                    v.setType(Vehicle.TypeVehicle.MOTO);
-                case 2 ->
-                    v.setType(Vehicle.TypeVehicle.BICICLETA);
-                case 3 ->
-                    v.setType(Vehicle.TypeVehicle.CAMINHONETE);
-                case 4 ->
-                    v.setType(Vehicle.TypeVehicle.CAMINHAO);
-                case 5 ->
-                    v.setType(Vehicle.TypeVehicle.ONIBUS);
-                case 6 ->
-                    v.setType(Vehicle.TypeVehicle.TANK);
-                case 7 ->
-                    v.setType(Vehicle.TypeVehicle.HELICOPTER);
-            }
+            v.setType(Vehicle.TypeVehicle.valueOf(Objects.requireNonNull(cBplace.getSelectedItem()).toString()));
             VehicleDAO vDao = new VehicleDAO();
             vDao.saveOrUpdate(v);
         } catch (Exception e) {
@@ -1345,7 +1328,7 @@ public class MainScreen extends javax.swing.JFrame {
                 fillHomeTable(parkedTable);
 
                 try {
-                    SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
+                    setTxtVagaDefaultValue(getNextFreeParkingSpot());
                 } catch (SQLException ex) {
                     Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -1375,8 +1358,11 @@ public class MainScreen extends javax.swing.JFrame {
 
             if (VerifyIfItsAlreadyParked != null) {
                 int option = 0;
+
+                boolean overwrite = txtCheckOutTime.getText().equals("  :  ");
+
                 // If departure time is "  :  ", ask to overwrite the data
-                if (txtCheckOutTime.getText().equals("  :  ")) {
+                if (overwrite) {
                     option = JOptionPane.showOptionDialog(this, "Veículo já estacionado!", "Alerta",
                             JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
                             new Object[]{"Sobrescrever", "Cancelar"}, "Sobrescrever");
@@ -1393,7 +1379,9 @@ public class MainScreen extends javax.swing.JFrame {
                     ParkingSpace ps = pDao.findByLicensePlate(licensePlate);
                     ps.setArrivalTime(txtCheckInTime.getText());
                     ps.setDepartureTime(txtCheckOutTime.getText());
-                    ps.setNumber(Short.parseShort(txtVaga.getText()));
+
+                    if (overwrite) { ps.setNumber(Short.parseShort(txtVaga.getText())); }
+                    else { ps.setNumber((short) 0); }
                     // Save parking space
                     pDao.saveOrUpdate(ps);
 
@@ -1405,8 +1393,11 @@ public class MainScreen extends javax.swing.JFrame {
                 }
 
                 fillHomeTable(parkedTable);
-
                 registerPayment();
+
+                btnCancelActionPerformed(null);
+
+                setTxtVagaDefaultValue(getNextFreeParkingSpot());
                 return;
             }
 
@@ -1445,7 +1436,7 @@ public class MainScreen extends javax.swing.JFrame {
 
         btnCancelActionPerformed(null);
         try {
-            SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
+            setTxtVagaDefaultValue(getNextFreeParkingSpot());
         } catch (SQLException ex) {
             Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
         }
