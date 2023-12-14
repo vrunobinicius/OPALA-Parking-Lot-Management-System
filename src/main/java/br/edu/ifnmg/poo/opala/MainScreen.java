@@ -1175,6 +1175,7 @@ public class MainScreen extends javax.swing.JFrame {
         // TODO add your handling code here:
         cardMainScreen.show(pnlMain, "Home");
         changeColorButton(btnHome);
+        fillHomeTable(parkedTable);
     }//GEN-LAST:event_btnHomeActionPerformed
 
     private void btnPaymentActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPaymentActionPerformed
@@ -1290,8 +1291,6 @@ public class MainScreen extends javax.swing.JFrame {
                 payment.setPaymentDate(LocalDate.now().toString());
                 payment.setPaymentTime(txtCheckOutTime.getText());
                 payment.setPaymentType(Payment.PaymentType.HORISTA);
-
-                // Abluble
                 payment.setId_driver(driver.getId());
                 payment.setId_parking_space(ps.getId());
 
@@ -1337,17 +1336,29 @@ public class MainScreen extends javax.swing.JFrame {
             // Search if a vehicle with the same license plate is already parked
             ParkingSpace VerifyIfItsAlreadyParked = new ParkingSpaceDAO().findByLicensePlate(licensePlate);
 
-            // Only enters when you save a vehicle with a license plate that is already present
-            // in the parking lot, but you haven't registered the departure yet
-            if (!registerPayment() && VerifyIfItsAlreadyParked != null) {
-                // If it is, ask if the user wants to overwrite the data
-                int option = JOptionPane.showOptionDialog(this, "Veículo já estacionado!", "Alerta",
-                        JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
-                        new Object[]{"Sobrescrever", "Cancelar"}, "Sobrescrever");
+            if (VerifyIfItsAlreadyParked != null) {
+                int option = 0;
+                // If departure time is "  :  ", ask to overwrite the data
+                if (txtCheckOutTime.getText().equals("  :  ")) {
+                    option = JOptionPane.showOptionDialog(this, "Veículo já estacionado!", "Alerta",
+                            JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
+                            new Object[]{"Sobrescrever", "Cancelar"}, "Sobrescrever");
+                } else {
+                    // If departure time is not "  :  ", ask to register the payment
+                    option = JOptionPane.showOptionDialog(this, "Veículo já estacionado!", "Alerta",
+                            JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
+                            new Object[]{"Registrar pagamento", "Cancelar"}, "Registrar pagamento");
+                }
 
                 if (option == JOptionPane.YES_OPTION) {
                     // Set arrival time on parking space
-
+                    ParkingSpaceDAO pDao = new ParkingSpaceDAO();
+                    ParkingSpace ps = pDao.findByLicensePlate(licensePlate);
+                    ps.setArrivalTime(txtCheckInTime.getText());
+                    ps.setDepartureTime(txtCheckOutTime.getText());
+                    ps.setNumber(Short.parseShort(txtVaga.getText()));
+                    // Save parking space
+                    pDao.saveOrUpdate(ps);
 
                     // Set vehicle data
                     VehicleDAO vDao = new VehicleDAO();
@@ -1357,7 +1368,8 @@ public class MainScreen extends javax.swing.JFrame {
                 }
                 
                 fillHomeTable(parkedTable);
-                
+
+                registerPayment();
                 return;
             }
 
