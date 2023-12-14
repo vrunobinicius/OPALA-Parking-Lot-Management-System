@@ -18,16 +18,14 @@ import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.math.BigDecimal;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.*;
@@ -122,13 +120,18 @@ public class MainScreen extends javax.swing.JFrame {
             for (Vehicle v : vList) {
                 if (v != null) {
                     ParkingSpace p = getParkingSpaceByVehicle(v);
-                    model.addRow(new Object[]{
+                    // If departureTime is present, the vehicle is not parked
+                    if (p.getDepartureTime().equals("  :  ")) {
+                        System.out.println(v.getLicensePlate() + "->>> " + p.getDepartureTime());
+                        model.addRow(new Object[]{
                             v.getLicensePlate(),
                             p.getNumber(),
                             v.getStringType(),
                             p.getArrivalTime(),
                             v.getNote()
-                    });
+                        });
+                    }
+
                 }
             }
         }
@@ -149,7 +152,7 @@ public class MainScreen extends javax.swing.JFrame {
                         // Placa
                         v.getLicensePlate(),
                         // Valor
-                        p.getAmount(),
+                        String.format("R$ %.2f", p.getAmount()),
                         // Data
                         p.getPaymentDate(),
                         // Hora
@@ -1305,8 +1308,6 @@ public class MainScreen extends javax.swing.JFrame {
                 // Set home table
                 fillHomeTable(parkedTable);
 
-                // Clear fields
-                btnCancelActionPerformed(null);
                 try {
                     SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
                 } catch (SQLException ex) {
@@ -1331,16 +1332,14 @@ public class MainScreen extends javax.swing.JFrame {
                 return;
             }
 
-            if (registerPayment()) {
-                return;
-            }
-
             String licensePlate = txtPlaca.getText();
 
             // Search if a vehicle with the same license plate is already parked
             ParkingSpace VerifyIfItsAlreadyParked = new ParkingSpaceDAO().findByLicensePlate(licensePlate);
 
-            if (VerifyIfItsAlreadyParked != null) {
+            // Only enters when you save a vehicle with a license plate that is already present
+            // in the parking lot, but you haven't registered the departure yet
+            if (!registerPayment() && VerifyIfItsAlreadyParked != null) {
                 // If it is, ask if the user wants to overwrite the data
                 int option = JOptionPane.showOptionDialog(this, "Veículo já estacionado!", "Alerta",
                         JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE, null,
@@ -1384,6 +1383,7 @@ public class MainScreen extends javax.swing.JFrame {
             ps.setNumber(Short.parseShort(txtVaga.getText()));
             ps.setArrivalTime(txtCheckInTime.getText());
             ps.setDepartureTime(txtCheckOutTime.getText());
+            System.out.println("txtCheckOutTime.getText() -> " + txtCheckOutTime.getText());
             // Save parking space
             ParkingSpaceDAO pDao = new ParkingSpaceDAO();
             pDao.saveOrUpdate(ps);
