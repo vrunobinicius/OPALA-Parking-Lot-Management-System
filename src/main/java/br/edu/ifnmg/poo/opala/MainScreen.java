@@ -61,12 +61,12 @@ public class MainScreen extends javax.swing.JFrame {
 
         DefaultTableModel model = (DefaultTableModel) tableDriver.getModel();
         tableDriver.setRowSorter(new TableRowSorter(model));
-        try{
+        try {
             SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
         } catch (SQLException e) {
             return;
         }
-        
+
         fillTable(tableDriver);
         FillCbPlaceComboBox();
         setCheckInTimeToNow();
@@ -118,7 +118,7 @@ public class MainScreen extends javax.swing.JFrame {
 
         if (vList != null) {
             for (Vehicle v : vList) {
-                if (v != null){
+                if (v != null) {
                     ParkingSpace p = getParkingSpaceByVehicleId(v);
                     addRowToModel(model, v, p);
                 }
@@ -133,69 +133,69 @@ public class MainScreen extends javax.swing.JFrame {
 
     private void addRowToModel(DefaultTableModel model, Vehicle v, ParkingSpace p) {
         model.addRow(new Object[]{
-                v.getLicensePlate(),
-                p.getNumber(),
-                v.getStringType(),
-                p.getArrivalTime(),
-                v.getNote()
+            v.getLicensePlate(),
+            p.getNumber(),
+            v.getStringType(),
+            p.getArrivalTime(),
+            v.getNote()
         });
     }
 
     public int GetNextFreeParkingSpot() throws SQLException {
         int firstAvailableSpot = 1;
+
         try {
             Connection connection = DbConnection.getConnection();
 
-            // Recupere todas as vagas utilizadas
+            // Recupera todas as vagas utilizadas
             String usedSpotsQuery = "SELECT number FROM ParkingSpace ORDER BY number ASC";
+
             try (PreparedStatement usedSpotsStatement = connection.prepareStatement(usedSpotsQuery)) {
-                try (ResultSet usedSpotsResult = usedSpotsStatement.executeQuery()) {
+//                try (ResultSet usedSpotsResult = usedSpotsStatement.executeQuery()) {
+                ResultSet usedSpotsResult = usedSpotsStatement.executeQuery();
 
-                    // Armazene as vagas utilizadas em uma lista
-                    List<Integer> usedSpots = new ArrayList<>();
-                    while (usedSpotsResult.next()) {
-                        usedSpots.add(usedSpotsResult.getInt("number"));
-                    }
-
-                    // Encontre a primeira vaga livre
-                    int maxSpot = usedSpots.isEmpty() ? 1 : Collections.max(usedSpots) + 1;
-                    for (int i = 1; i <= maxSpot; i++) {
-                        if (!usedSpots.contains(i)) {
-                            firstAvailableSpot = i;
-                            break;
-                        }
-                    }
-
-                    // Retorne o número da primeira vaga livre
-                    return firstAvailableSpot;
+                // Armazena as vagas utilizadas em uma lista
+                List<Integer> usedSpots = new ArrayList<>();
+                while (usedSpotsResult.next()) {
+                    usedSpots.add(usedSpotsResult.getInt("number"));
                 }
+
+                // Encontra a primeira vaga livre
+                int maxSpot = usedSpots.isEmpty() ? 1 : Collections.max(usedSpots) + 1;
+                for (int i = 1; i <= maxSpot; i++) {
+                    if (!usedSpots.contains(i)) {
+                        firstAvailableSpot = i;
+                        break;
+                    }
+                }
+
+                return firstAvailableSpot;
+//                }Ï
             }
         } catch (SQLException e) {
-            // Trate a exceção conforme necessário
             e.printStackTrace(); // TODO: Melhorar isso aqui
             return -1;
         }
     }
 
-
     public void SetTxtVagaDefaultValue(int firstAvailableSpot) {
         String firstAvailableSpotStr = String.valueOf(firstAvailableSpot);
         txtVaga.setText(firstAvailableSpotStr);
-        txtVaga.addFocusListener(new FocusListener() {
-            @Override
-            public void focusGained(FocusEvent e) {
-                if (txtVaga.getText().equals(firstAvailableSpotStr)) {
-                    txtVaga.setText(""); // Limpar o texto padrão ao receber o foco
-                }
-            }
-
-            @Override
-            public void focusLost(FocusEvent e) {
-                if (txtVaga.getText().isEmpty()) {
-                    txtVaga.setText(firstAvailableSpotStr); // Restaurar o texto padrão se o campo estiver vazio
-                }
-            }
-        });
+//        txtVaga.addFocusListener(new FocusListener() {
+//            @Override
+//            public void focusGained(FocusEvent e) {
+//                if (txtVaga.getText().equals(firstAvailableSpotStr)) {
+//                    txtVaga.setText(""); // Limpar o texto padrão ao receber o foco
+//                }
+//            }
+//
+//            @Override
+//            public void focusLost(FocusEvent e) {
+//                if (txtVaga.getText().isEmpty()) {
+//                    txtVaga.setText(firstAvailableSpotStr); // Restaurar o texto padrão se o campo estiver vazio
+//                }
+//            }
+//        });
     }
 
     public final void setCheckInTimeToNow() {
@@ -203,7 +203,7 @@ public class MainScreen extends javax.swing.JFrame {
             @Override
             public void focusGained(FocusEvent e) {
 
-                if ("  :  ".equals(txtCheckInTime.getText()) ) {
+                if ("  :  ".equals(txtCheckInTime.getText())) {
                     // Set txtCheckInTime to now only if it's empty
                     LocalTime horaAtual = LocalTime.now();
                     DateTimeFormatter formato = DateTimeFormatter.ofPattern("HH:mm");
@@ -220,7 +220,6 @@ public class MainScreen extends javax.swing.JFrame {
         });
     }
 
-    
     public final void FillCbPlaceComboBox() {
         cBplace.addItem("CARRO");
         cBplace.addItem("MOTO");
@@ -1196,7 +1195,7 @@ public class MainScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_FieldNotesActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        // TODO add your handling code here:
+        // TODO mover para limparCampos()
         txtPlaca.setText(null);
         FieldNotes.setText(null);
         txtVaga.setText(null);
@@ -1209,34 +1208,27 @@ public class MainScreen extends javax.swing.JFrame {
             v.setNote(FieldNotes.getText());
             v.setLicensePlate(txtPlaca.getText());
             switch (cBplace.getSelectedIndex()) {
-                case 0:
+                case 0 ->
                     v.setType(Vehicle.TypeVehicle.CARRO);
-                    break;
-                case 1:
+                case 1 ->
                     v.setType(Vehicle.TypeVehicle.MOTO);
-                    break;
-                case 2:
+                case 2 ->
                     v.setType(Vehicle.TypeVehicle.BICICLETA);
-                    break;
-                case 3:
+                case 3 ->
                     v.setType(Vehicle.TypeVehicle.CAMINHONETE);
-                    break;
-                case 4:
+                case 4 ->
                     v.setType(Vehicle.TypeVehicle.CAMINHAO);
-                    break;
-                case 5:
+                case 5 ->
                     v.setType(Vehicle.TypeVehicle.ONIBUS);
-                    break;
-                case 6:
+                case 6 ->
                     v.setType(Vehicle.TypeVehicle.TANK);
-                    break;
-                case 7:
+                case 7 ->
                     v.setType(Vehicle.TypeVehicle.HELICOPTER);
-                    break;
             }
             VehicleDAO vDao = new VehicleDAO();
             vDao.saveOrUpdate(v);
         } catch (Exception e) {
+
             System.out.println(e.getMessage());
             throw e;
         }
@@ -1244,12 +1236,13 @@ public class MainScreen extends javax.swing.JFrame {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         try {
-            SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
+//            SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
 
             String licensePlate = txtPlaca.getText();
 
             // Search if a vehicle with the same license plate is already parked
             ParkingSpace VerifyIfItsAlreadyParked = new ParkingSpaceDAO().findByLicensePlate(licensePlate);
+
             if (VerifyIfItsAlreadyParked != null) {
                 // If it is, ask if the user wants to overwrite the data
                 int option = JOptionPane.showOptionDialog(this, "Veículo já estacionado!", "Alerta",
@@ -1263,7 +1256,9 @@ public class MainScreen extends javax.swing.JFrame {
                     vehicle.setId_driver(VerifyIfItsAlreadyParked.getId_driver());
                     setAndSaveVehicle(vehicle);
                 }
+                
                 fillTable(tableDriver);
+                
                 return;
             }
 
@@ -1297,9 +1292,16 @@ public class MainScreen extends javax.swing.JFrame {
             System.out.println(ex.getMessage());
             JOptionPane.showMessageDialog(this, "Erro ao salvar dados!", "Erro", JOptionPane.ERROR_MESSAGE);
         }
+        
         fillTable(tableDriver);
 
         btnCancelActionPerformed(null);
+        try {
+            SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
+        } catch (SQLException ex) {
+            Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }//GEN-LAST:event_btnSaveActionPerformed
 
     private void cBplaceActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cBplaceActionPerformed
@@ -1315,11 +1317,11 @@ public class MainScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_txtCheckInTimeActionPerformed
 
     private void tableDriverMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableDriverMouseClicked
-        DefaultTableModel model = (DefaultTableModel)tableDriver.getModel();
+        DefaultTableModel model = (DefaultTableModel) tableDriver.getModel();
         int selectedRowIndex = tableDriver.getSelectedRow();
-        
+
         txtPlaca.setText(model.getValueAt(
-                selectedRowIndex, 
+                selectedRowIndex,
                 JTableUtils.getColumnIndexByName(
                         tableDriver, "Placa")).toString());
 
@@ -1354,7 +1356,7 @@ public class MainScreen extends javax.swing.JFrame {
             private boolean isValidTime(String time) {
                 return time.matches("([01]?[0-9]|2[0-3]):[0-5][0-9]");
             }
-            
+
             private void update() {
                 String checkIn = txtCheckInTime.getText();
                 String checkOut = txtCheckOutTime.getText();
@@ -1388,7 +1390,7 @@ public class MainScreen extends javax.swing.JFrame {
         txtCheckOutTime.getDocument().addDocumentListener(documentListener);
         txtCheckInTime.getDocument().addDocumentListener(documentListener);
 
-        
+
     }//GEN-LAST:event_tableDriverMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
