@@ -30,6 +30,7 @@ public class Payment extends Entity {
     }
 
     //<editor-fold defaultstate="collapsed" desc="GETTERS/SETTERS">
+
     public int getPaymentFrequency() {
         return paymentFrequency;
     }
@@ -101,6 +102,7 @@ public class Payment extends Entity {
     public void setId_parking_space(Long id_parking_space) {
         this.id_parking_space = id_parking_space;
     }
+
     //</editor-fold>
 
 }

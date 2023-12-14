@@ -52,10 +52,10 @@ public class PaymentDAO extends Dao<Payment> {
 
             switch (e.getPaymentType()) {
                 case HORISTA -> {
-                    pstmt.setString(8, "CARRO");
+                    pstmt.setString(8, "HORISTA");
                 }
                 case MENSALISTA -> {
-                    pstmt.setString(8, "MOTO");
+                    pstmt.setString(8, "MENSALISTA");
                 }
             }
 
@@ -113,7 +113,7 @@ public class PaymentDAO extends Dao<Payment> {
             payment.setPaymentTime(resultSet.getString("paymentTime"));
             payment.setPaymentFrequency(resultSet.getInt("paymentFrequency"));
             payment.setPaymentMethod(resultSet.getString("paymentMethod"));
-            payment.setPaymentType(PaymentType.valueOf(resultSet.getString("paymentype")));
+            payment.setPaymentType(PaymentType.valueOf(resultSet.getString("paymentType")));
         } catch (SQLException ex) {
             Logger.getLogger(PaymentDAO.class.getName()).log(Level.SEVERE, null, ex);
         } catch (Exception ex) {

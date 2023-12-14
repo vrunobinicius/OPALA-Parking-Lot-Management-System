@@ -42,8 +42,23 @@ typeUser ENUM('ADMIN', 'OPERATOR', 'SUBSCRIBER', 'DISABLED') NOT NULL,
 FOREIGN KEY(id_user) REFERENCES User(id) 
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
+CREATE TABLE Payment (
+    id bigint unsigned PRIMARY KEY AUTO_INCREMENT,
+    id_driver bigint unsigned,
+    id_parking_space bigint unsigned,
+    paymentType ENUM('MENSALISTA', 'HORISTA') NOT NULL,
+    paymentFrequency INT,
+    amount DECIMAL(10, 2) NOT NULL,
+    paymentDate varchar(10),
+    paymentTime varchar(10),
+    paymentMethod VARCHAR(50) NOT NULL,
+    FOREIGN KEY (id_driver) REFERENCES Driver(id),
+    FOREIGN KEY (id_parking_space) REFERENCES ParkingSpace(id)
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
 desc Driver;
 desc Vehicle;
 desc ParkingSpace;
 desc User;
 desc Credential;
+desc Payment;

@@ -752,9 +752,9 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                   <SubComponents>
-                    <Component class="javax.swing.JTable" name="tableDriver">
+                    <Component class="javax.swing.JTable" name="parkedTable">
                       <Properties>
-                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor" postCode="tableDriver.setRowSelectionAllowed(true);&#xa;tableDriver.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);">
+                        <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor" postCode="parkedTable.setRowSelectionAllowed(true);&#xa;parkedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);">
                           <Color blue="ff" green="ff" red="ff" type="rgb"/>
                         </Property>
                         <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
@@ -812,7 +812,7 @@
                         </Property>
                       </Properties>
                       <Events>
-                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tableDriverMouseClicked"/>
+                        <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="parkedTableMouseClicked"/>
                       </Events>
                     </Component>
                   </SubComponents>
@@ -1055,7 +1055,7 @@
 
                   <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
                   <SubComponents>
-                    <Component class="javax.swing.JTable" name="tblLista">
+                    <Component class="javax.swing.JTable" name="paymentTable">
                       <Properties>
                         <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
                           <Color blue="ff" green="ff" red="ff" type="rgb"/>
@@ -1064,12 +1064,13 @@
                           <Color blue="6d" green="b6" red="8a" type="rgb"/>
                         </Property>
                         <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
-                          <Table columnCount="5" rowCount="10">
-                            <Column editable="true" title="Vaga" type="java.lang.Object"/>
+                          <Table columnCount="6" rowCount="10">
                             <Column editable="true" title="Placa" type="java.lang.Object"/>
-                            <Column editable="true" title="Ve&#xed;culo" type="java.lang.Object"/>
-                            <Column editable="true" title="Horario Entrada" type="java.lang.Object"/>
-                            <Column editable="true" title="Data Entrada" type="java.lang.Object"/>
+                            <Column editable="true" title="Valor" type="java.lang.Object"/>
+                            <Column editable="true" title="Data" type="java.lang.Object"/>
+                            <Column editable="true" title="Hora" type="java.lang.Object"/>
+                            <Column editable="true" title="M&#xe9;todo" type="java.lang.Object"/>
+                            <Column editable="true" title="Tipo" type="java.lang.Object"/>
                           </Table>
                         </Property>
                         <Property name="gridColor" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">

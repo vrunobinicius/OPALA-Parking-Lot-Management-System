@@ -7,6 +7,8 @@ import br.edu.ifnmg.poo.driver.DriverDAO;
 import br.edu.ifnmg.poo.helper.JTableUtils;
 import br.edu.ifnmg.poo.parkingSpace.ParkingSpace;
 import br.edu.ifnmg.poo.parkingSpace.ParkingSpaceDAO;
+import br.edu.ifnmg.poo.payment.Payment;
+import br.edu.ifnmg.poo.payment.PaymentDAO;
 import br.edu.ifnmg.poo.repository.DbConnection;
 import br.edu.ifnmg.poo.vehicle.Vehicle;
 import br.edu.ifnmg.poo.vehicle.VehicleDAO;
@@ -15,10 +17,12 @@ import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -59,15 +63,15 @@ public class MainScreen extends javax.swing.JFrame {
             getRootPane().putClientProperty("apple.awt.transparentTitleBar", true);
         }
 
-        DefaultTableModel model = (DefaultTableModel) tableDriver.getModel();
-        tableDriver.setRowSorter(new TableRowSorter<>(model));
+        DefaultTableModel model = (DefaultTableModel) parkedTable.getModel();
+        parkedTable.setRowSorter(new TableRowSorter<>(model));
         try {
             SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
         } catch (SQLException e) {
             return;
         }
 
-        fillTable(tableDriver);
+        fillHomeTable(parkedTable);
         FillCbPlaceComboBox();
         setCheckInTimeToNow();
 
@@ -107,7 +111,7 @@ public class MainScreen extends javax.swing.JFrame {
         lastClickedButton = button;
     }
 
-    public final void fillTable(JTable table) {
+    private final void fillHomeTable(JTable table) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setNumRows(0);
 
@@ -118,7 +122,42 @@ public class MainScreen extends javax.swing.JFrame {
             for (Vehicle v : vList) {
                 if (v != null) {
                     ParkingSpace p = getParkingSpaceByVehicleId(v);
-                    addRowToModel(model, v, p);
+                    model.addRow(new Object[]{
+                            v.getLicensePlate(),
+                            p.getNumber(),
+                            v.getStringType(),
+                            p.getArrivalTime(),
+                            v.getNote()
+                    });
+                }
+            }
+        }
+    }
+
+    private final void fillPaymentTable(JTable table){
+        DefaultTableModel model = (DefaultTableModel) table.getModel();
+        model.setNumRows(0);
+
+        PaymentDAO pDao = new PaymentDAO();
+        List<Payment> pList = pDao.findAll();
+
+        if(pList != null){
+            for(Payment p : pList){
+                if(p != null){
+                    model.addRow(new Object[]{
+                        // Placa
+                        txtPlaca.getText(),
+                        // Valor
+                        p.getAmount(),
+                        // Data
+                        p.getPaymentDate(),
+                        // Hora
+                        p.getPaymentTime(),
+                        // Método
+                        p.getPaymentMethod(),
+                        // Tipo
+                        p.getPaymentType()
+                    });
                 }
             }
         }
@@ -129,15 +168,7 @@ public class MainScreen extends javax.swing.JFrame {
         return pDao.findById(v.getId());
     }
 
-    private void addRowToModel(DefaultTableModel model, Vehicle v, ParkingSpace p) {
-        model.addRow(new Object[]{
-            v.getLicensePlate(),
-            p.getNumber(),
-            v.getStringType(),
-            p.getArrivalTime(),
-            v.getNote()
-        });
-    }
+
 
     public int GetNextFreeParkingSpot() throws SQLException {
         int firstAvailableSpot = 1;
@@ -253,7 +284,7 @@ public class MainScreen extends javax.swing.JFrame {
         txtFeeLabel = new javax.swing.JLabel();
         EstacionamentojPanel = new javax.swing.JPanel();
         scrPaneLista = new javax.swing.JScrollPane();
-        tableDriver = new javax.swing.JTable();
+        parkedTable = new javax.swing.JTable();
         lblEstacionamento = new javax.swing.JLabel();
         pnlPayment = new javax.swing.JPanel();
         lblCaixa = new javax.swing.JLabel();
@@ -264,7 +295,7 @@ public class MainScreen extends javax.swing.JFrame {
         btnDinheiro = new javax.swing.JButton();
         btnCartao = new javax.swing.JButton();
         scrPnLista = new javax.swing.JScrollPane();
-        tblLista = new javax.swing.JTable();
+        paymentTable = new javax.swing.JTable();
         pnlRelatorio = new javax.swing.JPanel();
         btnBaixarMensal = new javax.swing.JButton();
         btnBaixarDiario = new javax.swing.JButton();
@@ -644,11 +675,11 @@ public class MainScreen extends javax.swing.JFrame {
 
         EstacionamentojPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        tableDriver.setBackground(new java.awt.Color(255, 255, 255));
-        tableDriver.setRowSelectionAllowed(true);
-        tableDriver.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        tableDriver.setForeground(new java.awt.Color(0, 133, 255));
-        tableDriver.setModel(new javax.swing.table.DefaultTableModel(
+        parkedTable.setBackground(new java.awt.Color(255, 255, 255));
+        parkedTable.setRowSelectionAllowed(true);
+        parkedTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        parkedTable.setForeground(new java.awt.Color(0, 133, 255));
+        parkedTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -664,15 +695,15 @@ public class MainScreen extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tableDriver.setGridColor(new java.awt.Color(255, 255, 255));
-        tableDriver.setSelectionBackground(new java.awt.Color(223, 249, 255));
-        tableDriver.setSelectionForeground(new java.awt.Color(0, 0, 0));
-        tableDriver.addMouseListener(new java.awt.event.MouseAdapter() {
+        parkedTable.setGridColor(new java.awt.Color(255, 255, 255));
+        parkedTable.setSelectionBackground(new java.awt.Color(223, 249, 255));
+        parkedTable.setSelectionForeground(new java.awt.Color(0, 0, 0));
+        parkedTable.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tableDriverMouseClicked(evt);
+                parkedTableMouseClicked(evt);
             }
         });
-        scrPaneLista.setViewportView(tableDriver);
+        scrPaneLista.setViewportView(parkedTable);
 
         lblEstacionamento.setBackground(new java.awt.Color(0, 133, 255));
         lblEstacionamento.setFont(new java.awt.Font("Segoe UI", 1, 24)); // NOI18N
@@ -791,29 +822,29 @@ public class MainScreen extends javax.swing.JFrame {
                 .addContainerGap())
         );
 
-        tblLista.setBackground(new java.awt.Color(255, 255, 255));
-        tblLista.setForeground(new java.awt.Color(138, 182, 109));
-        tblLista.setModel(new javax.swing.table.DefaultTableModel(
+        paymentTable.setBackground(new java.awt.Color(255, 255, 255));
+        paymentTable.setForeground(new java.awt.Color(138, 182, 109));
+        paymentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null},
+                {null, null, null, null, null, null}
             },
             new String [] {
-                "Vaga", "Placa", "Veículo", "Horario Entrada", "Data Entrada"
+                "Placa", "Valor", "Data", "Hora", "Método", "Tipo"
             }
         ));
-        tblLista.setGridColor(new java.awt.Color(255, 255, 255));
-        tblLista.setSelectionBackground(new java.awt.Color(223, 249, 255));
-        tblLista.setSelectionForeground(new java.awt.Color(255, 255, 255));
-        scrPnLista.setViewportView(tblLista);
+        paymentTable.setGridColor(new java.awt.Color(255, 255, 255));
+        paymentTable.setSelectionBackground(new java.awt.Color(223, 249, 255));
+        paymentTable.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        scrPnLista.setViewportView(paymentTable);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -1143,6 +1174,9 @@ public class MainScreen extends javax.swing.JFrame {
         // TODO add your handling code here:
         cardMainScreen.show(pnlMain, "Payment");
         changeColorButton(btnPayment);
+
+
+        
     }//GEN-LAST:event_btnPaymentActionPerformed
 
     private void btnRelatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRelatorioActionPerformed
@@ -1223,11 +1257,78 @@ public class MainScreen extends javax.swing.JFrame {
         }
     }
 
+    // Registrar pagamento
+    private boolean registerPayment(){
+        if (PaymentPanel.isVisible()) {
+            try {
+                // Check if value is 0
+                if (txtParkingFee.getText().equals("R$ 0,00")) {
+                    return true;
+                }
+
+                // Set parking space
+                ParkingSpaceDAO pDao = new ParkingSpaceDAO();
+                ParkingSpace ps = pDao.findByLicensePlate(txtPlaca.getText());
+
+                // Set driver data
+                DriverDAO dDao = new DriverDAO();
+                Driver driver = dDao.findById(ps.getId_driver());
+
+                // Create payment
+                Payment payment = new Payment();
+                payment.setDriver(driver);
+                payment.setPaymentMethod("DINHEIRO"); // TODO: Mudar para o método de pagamento selecionado
+                // Convert txtParking fee to bigdecimal ("R$ ##,##" to BigDecimal)
+                String parkingFee = txtParkingFee.getText().replace("R$ ", "").replace(",", ".");
+                payment.setAmount(new BigDecimal(parkingFee));
+                payment.setPaymentDate(LocalDate.now().toString());
+                payment.setPaymentTime(txtCheckOutTime.getText());
+                payment.setPaymentType(Payment.PaymentType.HORISTA);
+
+                // Abluble
+                payment.setId_driver(driver.getId());
+                payment.setId_parking_space(ps.getId());
+
+                // Save payment
+                PaymentDAO payDao = new PaymentDAO();
+                payDao.saveOrUpdate(payment);
+
+                // Set payment table
+                fillPaymentTable(paymentTable);
+
+                // TODO: Remove parked vehicle from database
+
+
+                // Set home table
+                fillHomeTable(parkedTable);
+
+                // Clear fields
+                btnCancelActionPerformed(null);
+                try {
+                    SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
+                } catch (SQLException ex) {
+                    Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+                return true;
+
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+                JOptionPane.showMessageDialog(this, "Erro ao salvar dados!", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+        return false;
+    }
+
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         try {
             // Force the user to fill the check in time
             if (txtCheckInTime.getText().equals("  :  ")) {
                 JOptionPane.showMessageDialog(this, "Preencha o horário de entrada!", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (registerPayment()) {
                 return;
             }
 
@@ -1253,7 +1354,7 @@ public class MainScreen extends javax.swing.JFrame {
                     setAndSaveVehicle(vehicle);
                 }
                 
-                fillTable(tableDriver);
+                fillHomeTable(parkedTable);
                 
                 return;
             }
@@ -1289,7 +1390,7 @@ public class MainScreen extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Erro ao salvar dados!", "Erro", JOptionPane.ERROR_MESSAGE);
         }
         
-        fillTable(tableDriver);
+        fillHomeTable(parkedTable);
 
         btnCancelActionPerformed(null);
         try {
@@ -1312,34 +1413,29 @@ public class MainScreen extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtCheckInTimeActionPerformed
 
-    private void tableDriverMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableDriverMouseClicked
-        DefaultTableModel model = (DefaultTableModel) tableDriver.getModel();
-        int selectedRowIndex = tableDriver.getSelectedRow();
+    private void parkedTableMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_parkedTableMouseClicked
+        DefaultTableModel model = (DefaultTableModel) parkedTable.getModel();
+        int selectedRowIndex = parkedTable.getSelectedRow();
 
         txtPlaca.setText(model.getValueAt(
                 selectedRowIndex,
-                JTableUtils.getColumnIndexByName(
-                        tableDriver, "Placa")).toString());
+                JTableUtils.getColumnIndexByName(parkedTable, "Placa")).toString());
 
         txtVaga.setText(model.getValueAt(
                 selectedRowIndex,
-                JTableUtils.getColumnIndexByName(
-                        tableDriver, "Vaga")).toString());
+                JTableUtils.getColumnIndexByName(parkedTable, "Vaga")).toString());
 
         cBplace.setSelectedItem(model.getValueAt(
                 selectedRowIndex,
-                JTableUtils.getColumnIndexByName(
-                        tableDriver, "Tipo Veículo")).toString());
+                JTableUtils.getColumnIndexByName(parkedTable, "Tipo Veículo")).toString());
 
         txtCheckInTime.setText(model.getValueAt(
                 selectedRowIndex,
-                JTableUtils.getColumnIndexByName(
-                        tableDriver, "Horário de Entrada")).toString());
+                JTableUtils.getColumnIndexByName(parkedTable, "Horário de Entrada")).toString());
 
         FieldNotes.setText(model.getValueAt(
                 selectedRowIndex,
-                JTableUtils.getColumnIndexByName(
-                        tableDriver, "Observação")).toString());
+                JTableUtils.getColumnIndexByName(parkedTable, "Observação")).toString());
 
         // Set checkout time to current time
         LocalTime horaAtual = LocalTime.now();
@@ -1387,7 +1483,7 @@ public class MainScreen extends javax.swing.JFrame {
         txtCheckInTime.getDocument().addDocumentListener(documentListener);
 
 
-    }//GEN-LAST:event_tableDriverMouseClicked
+    }//GEN-LAST:event_parkedTableMouseClicked
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel EntradaDeVeiculosjPanel;
@@ -1428,6 +1524,8 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JLabel lblSearchIconUser;
     private javax.swing.JLabel lblTitle;
     private javax.swing.JLabel lblUser;
+    private javax.swing.JTable parkedTable;
+    private javax.swing.JTable paymentTable;
     private javax.swing.JPanel pnlHome;
     private javax.swing.JPanel pnlMain;
     private javax.swing.JPanel pnlMenu;
@@ -1441,8 +1539,6 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JScrollPane scrPaneLista1;
     private javax.swing.JScrollPane scrPaneLista2;
     private javax.swing.JScrollPane scrPnLista;
-    private javax.swing.JTable tableDriver;
-    private javax.swing.JTable tblLista;
     private javax.swing.JFormattedTextField txtCheckInTime;
     private javax.swing.JFormattedTextField txtCheckOutTime;
     private javax.swing.JLabel txtFeeLabel;
