@@ -45,7 +45,7 @@ public class MainScreen extends javax.swing.JFrame {
     /**
      * Creates new form MainScreen
      */
-    public MainScreen() {
+    private MainScreen() {
         initComponents();
         setLocationRelativeTo(null);
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
@@ -60,7 +60,7 @@ public class MainScreen extends javax.swing.JFrame {
         }
 
         DefaultTableModel model = (DefaultTableModel) tableDriver.getModel();
-        tableDriver.setRowSorter(new TableRowSorter(model));
+        tableDriver.setRowSorter(new TableRowSorter<>(model));
         try {
             SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
         } catch (SQLException e) {
@@ -73,7 +73,7 @@ public class MainScreen extends javax.swing.JFrame {
 
     }
 
-    public MainScreen(Credential credential) {
+    private MainScreen(Credential credential) {
         this();
         switch (credential.getType()) {
             case ADMIN -> {
@@ -87,16 +87,14 @@ public class MainScreen extends javax.swing.JFrame {
                 this.btnPayment.setEnabled(true);
                 this.btnSubscriber.setEnabled(true);
             }
-            case SUBSCRIBER -> {
-                btnRelatorioActionPerformed(null);
-            }
+            case SUBSCRIBER -> btnRelatorioActionPerformed(null);
         }
         this.setTitle(this.getTitle() + " - " + credential.getUser().getName());
     }
 
-    public static MainScreen getInstance() {
+    public static MainScreen getInstance(Credential credential) {
         if (instance == null) {
-            instance = new MainScreen();
+            instance = new MainScreen(credential);
         }
         return instance;
     }

@@ -34,7 +34,7 @@ public class parkingFeeCalculator {
         }
 
         if (minutos > 0) {
-            valor += (double) VALOR_HORA / 4;
+            valor += (double) VALOR_HORA / 4.0;
         }
 
         return valor;

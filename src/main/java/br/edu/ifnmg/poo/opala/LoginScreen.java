@@ -283,7 +283,10 @@ public class LoginScreen extends javax.swing.JFrame {
         if (user != null) {
             credential = user.getCredential();
             this.setVisible(false);
-            new MainScreen(credential).setVisible(true);
+            //new MainScreen(credential).setVisible(true);
+            MainScreen ms = MainScreen.getInstance(credential);
+            ms.setVisible(true);
+
             lblErrorLogin.setText("");
         } else {
             lblErrorLogin.setText("Usuário ou Senha incorretos.");
@@ -298,8 +301,6 @@ public class LoginScreen extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-
-
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
