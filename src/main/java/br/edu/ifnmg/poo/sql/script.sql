@@ -37,7 +37,7 @@ id bigint unsigned PRIMARY KEY AUTO_INCREMENT,
 id_user bigint unsigned,
 username varchar(32) NOT NULL,
 password varchar(32) NOT NULL,
-lastAccess Date NOT NULL,
+lastAccess Date,
 typeUser ENUM('ADMIN', 'OPERATOR', 'SUBSCRIBER', 'DISABLED') NOT NULL,
 FOREIGN KEY(id_user) REFERENCES User(id) 
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;

@@ -2,6 +2,7 @@ package br.edu.ifnmg.poo.opala;
 
 import br.edu.ifnmg.poo.helper.*;
 import br.edu.ifnmg.poo.credential.Credential;
+import br.edu.ifnmg.poo.credential.CredentialDAO;
 import br.edu.ifnmg.poo.driver.Driver;
 import br.edu.ifnmg.poo.driver.DriverDAO;
 import br.edu.ifnmg.poo.helper.JTableUtils;
@@ -10,15 +11,19 @@ import br.edu.ifnmg.poo.parkingSpace.ParkingSpaceDAO;
 import br.edu.ifnmg.poo.payment.Payment;
 import br.edu.ifnmg.poo.payment.PaymentDAO;
 import br.edu.ifnmg.poo.repository.DbConnection;
+import br.edu.ifnmg.poo.user.User;
+import br.edu.ifnmg.poo.user.UserDAO;
 import br.edu.ifnmg.poo.vehicle.Vehicle;
 import br.edu.ifnmg.poo.vehicle.VehicleDAO;
 import com.formdev.flatlaf.util.SystemInfo;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.GridLayout;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.math.BigDecimal;
 import java.sql.*;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
@@ -33,6 +38,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
+import javax.swing.text.MaskFormatter;
 
 /**
  *
@@ -89,7 +95,8 @@ public class MainScreen extends javax.swing.JFrame {
                 this.btnPayment.setEnabled(true);
                 this.btnSubscriber.setEnabled(true);
             }
-            case SUBSCRIBER -> btnRelatorioActionPerformed(null);
+            case SUBSCRIBER ->
+                btnRelatorioActionPerformed(null);
         }
         this.setTitle(this.getTitle() + " - " + credential.getUser().getName());
     }
@@ -122,7 +129,6 @@ public class MainScreen extends javax.swing.JFrame {
                     ParkingSpace p = getParkingSpaceByVehicle(v);
                     // If departureTime is present, the vehicle is not parked
                     if (p.getDepartureTime().equals("  :  ")) {
-                        System.out.println(v.getLicensePlate() + "->>> " + p.getDepartureTime());
                         model.addRow(new Object[]{
                             v.getLicensePlate(),
                             p.getNumber(),
@@ -137,16 +143,16 @@ public class MainScreen extends javax.swing.JFrame {
         }
     }
 
-    private final void fillPaymentTable(JTable table){
+    private final void fillPaymentTable(JTable table) {
         DefaultTableModel model = (DefaultTableModel) table.getModel();
         model.setNumRows(0);
 
         PaymentDAO pDao = new PaymentDAO();
         List<Payment> pList = pDao.findAll();
 
-        if(pList != null){
-            for(Payment p : pList){
-                if(p != null){
+        if (pList != null) {
+            for (Payment p : pList) {
+                if (p != null) {
                     Vehicle v = getVehicleByParkingSpaceId(p.getId_parking_space());
                     model.addRow(new Object[]{
                         // Placa
@@ -1053,19 +1059,19 @@ public class MainScreen extends javax.swing.JFrame {
         jTable3.setForeground(new java.awt.Color(0, 133, 255));
         jTable3.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null},
-                {null, null, null, null, null}
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
             },
             new String [] {
-                "Vaga", "Placa", "Veículo", "Horario Entrada", "Data Entrada"
+                "id", "nome", "e-mail", "telefone"
             }
         ));
         jTable3.setGridColor(new java.awt.Color(255, 255, 255));
@@ -1102,6 +1108,11 @@ public class MainScreen extends javax.swing.JFrame {
         btnAddUser.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         btnAddUser.setForeground(new java.awt.Color(255, 255, 255));
         btnAddUser.setText("ADICIONAR");
+        btnAddUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddUserActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlUserLayout = new javax.swing.GroupLayout(pnlUser);
         pnlUser.setLayout(pnlUserLayout);
@@ -1183,7 +1194,7 @@ public class MainScreen extends javax.swing.JFrame {
         cardMainScreen.show(pnlMain, "Payment");
         changeColorButton(btnPayment);
         fillPaymentTable(paymentTable);
-        
+
     }//GEN-LAST:event_btnPaymentActionPerformed
 
     private void btnRelatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRelatorioActionPerformed
@@ -1265,13 +1276,15 @@ public class MainScreen extends javax.swing.JFrame {
     }
 
     // Registers the payment and returns true if successful
-    private boolean registerPayment(){
+    private boolean registerPayment() {
         if (PaymentPanel.isVisible()) {
             try {
                 // If the value is 0, we don't need to register the payment,
                 // but we need to remove the parked vehicle from the database
                 // regardless, so we return true
-                if (txtParkingFee.getText().equals("R$ 0,00")) { return true; }
+                if (txtParkingFee.getText().equals("R$ 0,00")) {
+                    return true;
+                }
 
                 // Set parking space
                 ParkingSpaceDAO pDao = new ParkingSpaceDAO();
@@ -1302,8 +1315,6 @@ public class MainScreen extends javax.swing.JFrame {
                 fillPaymentTable(paymentTable);
 
                 // TODO: Remove parked vehicle from database
-
-
                 // Set home table
                 fillHomeTable(parkedTable);
 
@@ -1366,7 +1377,7 @@ public class MainScreen extends javax.swing.JFrame {
                     vehicle.setId_driver(VerifyIfItsAlreadyParked.getId_driver());
                     setAndSaveVehicle(vehicle);
                 }
-                
+
                 fillHomeTable(parkedTable);
 
                 registerPayment();
@@ -1395,7 +1406,6 @@ public class MainScreen extends javax.swing.JFrame {
             ps.setNumber(Short.parseShort(txtVaga.getText()));
             ps.setArrivalTime(txtCheckInTime.getText());
             ps.setDepartureTime(txtCheckOutTime.getText());
-            System.out.println("txtCheckOutTime.getText() -> " + txtCheckOutTime.getText());
             // Save parking space
             ParkingSpaceDAO pDao = new ParkingSpaceDAO();
             pDao.saveOrUpdate(ps);
@@ -1404,7 +1414,7 @@ public class MainScreen extends javax.swing.JFrame {
             System.out.println(ex.getMessage());
             JOptionPane.showMessageDialog(this, "Erro ao salvar dados!", "Erro", JOptionPane.ERROR_MESSAGE);
         }
-        
+
         fillHomeTable(parkedTable);
 
         btnCancelActionPerformed(null);
@@ -1499,6 +1509,73 @@ public class MainScreen extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_parkedTableMouseClicked
+
+    private void btnAddUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddUserActionPerformed
+        // TODO add your handling code here:
+        JPanel panel = new JPanel(new GridLayout(0, 1));
+        JTextField nameField = new JTextField();
+        JTextField emailField = new JTextField();
+        // Phone with the mask (##) #####-####
+        MaskFormatter phoneMask = null;
+        try {
+            phoneMask = new MaskFormatter("(##) #####-####");
+        } catch (ParseException ex) {
+            Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        JFormattedTextField phoneField = new JFormattedTextField(phoneMask);
+
+        JTextField userName = new JTextField();
+        JComboBox typeUser = new JComboBox();
+        JPasswordField password = new JPasswordField();
+        typeUser.addItem("ADMIN");
+        typeUser.addItem("OPERATOR");
+        typeUser.addItem("SUBSCRIBER");
+        panel.add(new JLabel("Nome:"));
+        panel.add(nameField);
+        panel.add(new JLabel("E-mail:"));
+        panel.add(emailField);
+        panel.add(new JLabel("Telefone:"));
+        panel.add(phoneField);
+        panel.add(new JLabel("Tipo Usuario:"));
+        panel.add(typeUser);
+        panel.add(new JLabel("Username:"));
+        panel.add(userName);
+        panel.add(new JLabel("Senha:"));;
+        panel.add(password);
+        int result = JOptionPane.showConfirmDialog(null, panel, 
+                "Por favor, preencha os campos abaixo:", 
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+        if (result == JOptionPane.OK_OPTION) {
+            try {
+                String name = nameField.getText();
+                String email = emailField.getText();
+                String phone = phoneField.getText();
+                JOptionPane.showMessageDialog(null, "Nome: " + name +
+                        "\nE-mail: " + email + "\nTelefone: " + phone);
+                Credential c = new Credential();
+                c.setPassword(password.getPassword().toString());
+                c.setUsername(userName.getText());
+                c.setType(Credential.TypeUser.valueOf(typeUser.getSelectedItem().toString()));
+                
+                User u = new User();
+                u.setCredential(c);
+                u.setEmail(email);
+                u.setName(name);
+                // Remove any character that is not a number from the phone number
+                phone = phone.replaceAll("[^0-9]", "");
+                u.setTelephone(Long.parseLong(phone));
+                c.setUser(u);
+                
+                UserDAO uDao = new UserDAO();
+                uDao.saveOrUpdate(u);
+                CredentialDAO cDao = new CredentialDAO();
+                cDao.saveOrUpdate(c);
+                
+            } catch (Exception ex) {
+                Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_btnAddUserActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel EntradaDeVeiculosjPanel;
