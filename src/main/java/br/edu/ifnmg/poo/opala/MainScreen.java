@@ -181,21 +181,6 @@ public class MainScreen extends javax.swing.JFrame {
     public void SetTxtVagaDefaultValue(int firstAvailableSpot) {
         String firstAvailableSpotStr = String.valueOf(firstAvailableSpot);
         txtVaga.setText(firstAvailableSpotStr);
-//        txtVaga.addFocusListener(new FocusListener() {
-//            @Override
-//            public void focusGained(FocusEvent e) {
-//                if (txtVaga.getText().equals(firstAvailableSpotStr)) {
-//                    txtVaga.setText(""); // Limpar o texto padrão ao receber o foco
-//                }
-//            }
-//
-//            @Override
-//            public void focusLost(FocusEvent e) {
-//                if (txtVaga.getText().isEmpty()) {
-//                    txtVaga.setText(firstAvailableSpotStr); // Restaurar o texto padrão se o campo estiver vazio
-//                }
-//            }
-//        });
     }
 
     public final void setCheckInTimeToNow() {
@@ -1201,6 +1186,12 @@ public class MainScreen extends javax.swing.JFrame {
         txtVaga.setText(null);
         txtCheckInTime.setText(null);
         txtCheckOutTime.setText(null);
+
+        try {
+            SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
+        } catch (SQLException ex) {
+            Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void setAndSaveVehicle(Vehicle v) throws Exception {
@@ -1236,7 +1227,11 @@ public class MainScreen extends javax.swing.JFrame {
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
         try {
-//            SetTxtVagaDefaultValue(GetNextFreeParkingSpot());
+            // Force the user to fill the check in time
+            if (txtCheckInTime.getText().equals("  :  ")) {
+                JOptionPane.showMessageDialog(this, "Preencha o horário de entrada!", "Erro", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
             String licensePlate = txtPlaca.getText();
 
@@ -1250,6 +1245,9 @@ public class MainScreen extends javax.swing.JFrame {
                         new Object[]{"Sobrescrever", "Cancelar"}, "Sobrescrever");
 
                 if (option == JOptionPane.YES_OPTION) {
+                    // Set arrival time on parking space
+
+
                     // Set vehicle data
                     VehicleDAO vDao = new VehicleDAO();
                     Vehicle vehicle = vDao.findByLicensePlate(licensePlate);
