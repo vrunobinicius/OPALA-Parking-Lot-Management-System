@@ -121,7 +121,7 @@ public class MainScreen extends javax.swing.JFrame {
         if (vList != null) {
             for (Vehicle v : vList) {
                 if (v != null) {
-                    ParkingSpace p = getParkingSpaceByVehicleId(v);
+                    ParkingSpace p = getParkingSpaceByVehicle(v);
                     model.addRow(new Object[]{
                             v.getLicensePlate(),
                             p.getNumber(),
@@ -144,9 +144,10 @@ public class MainScreen extends javax.swing.JFrame {
         if(pList != null){
             for(Payment p : pList){
                 if(p != null){
+                    Vehicle v = getVehicleByParkingSpaceId(p.getId_parking_space());
                     model.addRow(new Object[]{
                         // Placa
-                        txtPlaca.getText(),
+                        v.getLicensePlate(),
                         // Valor
                         p.getAmount(),
                         // Data
@@ -163,12 +164,15 @@ public class MainScreen extends javax.swing.JFrame {
         }
     }
 
-    private ParkingSpace getParkingSpaceByVehicleId(Vehicle v) {
+    private ParkingSpace getParkingSpaceByVehicle(Vehicle v) {
         ParkingSpaceDAO pDao = new ParkingSpaceDAO();
         return pDao.findById(v.getId());
     }
 
-
+    private Vehicle getVehicleByParkingSpaceId(Long p) {
+        VehicleDAO vDao = new VehicleDAO();
+        return vDao.findById(p);
+    }
 
     public int GetNextFreeParkingSpot() throws SQLException {
         int firstAvailableSpot = 1;
@@ -1174,8 +1178,7 @@ public class MainScreen extends javax.swing.JFrame {
         // TODO add your handling code here:
         cardMainScreen.show(pnlMain, "Payment");
         changeColorButton(btnPayment);
-
-
+        fillPaymentTable(paymentTable);
         
     }//GEN-LAST:event_btnPaymentActionPerformed
 
@@ -1257,14 +1260,14 @@ public class MainScreen extends javax.swing.JFrame {
         }
     }
 
-    // Registrar pagamento
+    // Registers the payment and returns true if successful
     private boolean registerPayment(){
         if (PaymentPanel.isVisible()) {
             try {
-                // Check if value is 0
-                if (txtParkingFee.getText().equals("R$ 0,00")) {
-                    return true;
-                }
+                // If the value is 0, we don't need to register the payment,
+                // but we need to remove the parked vehicle from the database
+                // regardless, so we return true
+                if (txtParkingFee.getText().equals("R$ 0,00")) { return true; }
 
                 // Set parking space
                 ParkingSpaceDAO pDao = new ParkingSpaceDAO();
