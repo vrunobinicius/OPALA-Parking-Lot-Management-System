@@ -52,7 +52,7 @@ public class MainScreen extends javax.swing.JFrame {
     /**
      * Creates new form MainScreen
      */
-    private MainScreen() {
+    private MainScreen(Credential credential) {
         initComponents();
         setLocationRelativeTo(null);
         setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
@@ -77,13 +77,10 @@ public class MainScreen extends javax.swing.JFrame {
         fillHomeTable(parkedTable);
         FillCbPlaceComboBox();
         setCheckInTimeToNow();
-
     }
 
-    private MainScreen(Credential credential) {
-
-        this();
-
+    public void verifyTypeUser(Credential credential) {
+        System.out.println(">> " + credential.getType());
         switch (credential.getType()) {
             case ADMIN -> {
                 this.btnHome.setEnabled(true);
@@ -95,14 +92,18 @@ public class MainScreen extends javax.swing.JFrame {
                 this.btnHome.setEnabled(true);
                 this.btnPayment.setEnabled(true);
                 this.btnSubscriber.setEnabled(true);
+                this.btnUser.setEnabled(false);
             }
-            case SUBSCRIBER ->
+            case SUBSCRIBER -> {
                 btnRelatorioActionPerformed(null);
+                this.btnHome.setEnabled(false);
+                this.btnPayment.setEnabled(false);
+                this.btnSubscriber.setEnabled(false);
+                this.btnUser.setEnabled(false);
+            }
         }
-        this.setTitle(this.getTitle() + " - " + credential.getUser().getName());
+        this.setTitle("OPALA Parking Lot Management System" + " - " + credential.getUser().getName());
     }
-
-
 
     public static MainScreen getInstance(Credential credential) {
         if (instance == null) {
@@ -336,7 +337,6 @@ public class MainScreen extends javax.swing.JFrame {
         btnAddUser = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("OPALA Parking Lot Management System");
         setBackground(new java.awt.Color(38, 50, 56));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent evt) {
@@ -1346,8 +1346,11 @@ public class MainScreen extends javax.swing.JFrame {
                     ps.setArrivalTime(txtCheckInTime.getText());
                     ps.setDepartureTime(txtCheckOutTime.getText());
 
-                    if (overwrite) { ps.setNumber(Short.parseShort(txtVaga.getText())); }
-                    else { ps.setNumber((short) 0); }
+                    if (overwrite) {
+                        ps.setNumber(Short.parseShort(txtVaga.getText()));
+                    } else {
+                        ps.setNumber((short) 0);
+                    }
                     // Save parking space
                     pDao.saveOrUpdate(ps);
 
@@ -1526,21 +1529,21 @@ public class MainScreen extends javax.swing.JFrame {
         panel.add(userName);
         panel.add(new JLabel("Senha:"));;
         panel.add(password);
-        int result = JOptionPane.showConfirmDialog(null, panel, 
-                "Por favor, preencha os campos abaixo:", 
+        int result = JOptionPane.showConfirmDialog(null, panel,
+                "Por favor, preencha os campos abaixo:",
                 JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
         if (result == JOptionPane.OK_OPTION) {
             try {
                 String name = nameField.getText();
                 String email = emailField.getText();
                 String phone = phoneField.getText();
-                JOptionPane.showMessageDialog(null, "Nome: " + name +
-                        "\nE-mail: " + email + "\nTelefone: " + phone);
+                JOptionPane.showMessageDialog(null, "Nome: " + name
+                        + "\nE-mail: " + email + "\nTelefone: " + phone);
                 Credential c = new Credential();
                 c.setPassword(password.getPassword().toString());
                 c.setUsername(userName.getText());
                 c.setType(Credential.TypeUser.valueOf(typeUser.getSelectedItem().toString()));
-                
+
                 User u = new User();
                 u.setCredential(c);
                 u.setEmail(email);
@@ -1549,13 +1552,13 @@ public class MainScreen extends javax.swing.JFrame {
                 phone = phone.replaceAll("[^0-9]", "");
                 u.setTelephone(Long.parseLong(phone));
                 c.setUser(u);
-                
+
                 UserDAO uDao = new UserDAO();
                 uDao.saveOrUpdate(u);
                 CredentialDAO cDao = new CredentialDAO();
                 c.setId_user(u.getId());
                 cDao.saveOrUpdate(c);
-                
+
             } catch (Exception ex) {
                 Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
             }

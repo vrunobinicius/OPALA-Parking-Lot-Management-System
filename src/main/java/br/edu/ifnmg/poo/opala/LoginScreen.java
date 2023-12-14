@@ -285,6 +285,7 @@ public class LoginScreen extends javax.swing.JFrame {
             this.setVisible(false);
             //new MainScreen(credential).setVisible(true);
             MainScreen ms = MainScreen.getInstance(credential);
+            ms.verifyTypeUser(credential);
             ms.setVisible(true);
 
             lblErrorLogin.setText("");
