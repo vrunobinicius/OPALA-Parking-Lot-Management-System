@@ -827,7 +827,7 @@ public class MainScreen extends javax.swing.JFrame {
         );
 
         paymentTable.setBackground(new java.awt.Color(255, 255, 255));
-        paymentTable.setForeground(new java.awt.Color(138, 182, 109));
+        paymentTable.setForeground(new java.awt.Color(0, 133, 255));
         paymentTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null},
@@ -847,7 +847,7 @@ public class MainScreen extends javax.swing.JFrame {
         ));
         paymentTable.setGridColor(new java.awt.Color(255, 255, 255));
         paymentTable.setSelectionBackground(new java.awt.Color(223, 249, 255));
-        paymentTable.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        paymentTable.setSelectionForeground(new java.awt.Color(0, 0, 0));
         scrPnLista.setViewportView(paymentTable);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
