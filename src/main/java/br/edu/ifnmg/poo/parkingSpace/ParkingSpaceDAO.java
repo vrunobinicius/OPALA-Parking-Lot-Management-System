@@ -2,10 +2,15 @@ package br.edu.ifnmg.poo.parkingSpace;
 
 import br.edu.ifnmg.poo.repository.Dao;
 import br.edu.ifnmg.poo.repository.DbConnection;
+
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -114,5 +119,42 @@ public class ParkingSpaceDAO extends Dao<ParkingSpace> {
         }
 
         return ps;
+    }
+
+    public static int getNextFreeParkingSpot() throws SQLException {
+        int firstAvailableSpot = 1;
+
+        try {
+            Connection connection = DbConnection.getConnection();
+
+            // Recupera todas as vagas utilizadas
+            String usedSpotsQuery = "SELECT number FROM ParkingSpace ORDER BY number ASC";
+
+            try (PreparedStatement usedSpotsStatement = connection.prepareStatement(usedSpotsQuery)) {
+//                try (ResultSet usedSpotsResult = usedSpotsStatement.executeQuery()) {
+                ResultSet usedSpotsResult = usedSpotsStatement.executeQuery();
+
+                // Armazena as vagas utilizadas em uma lista
+                List<Integer> usedSpots = new ArrayList<>();
+                while (usedSpotsResult.next()) {
+                    usedSpots.add(usedSpotsResult.getInt("number"));
+                }
+
+                // Encontra a primeira vaga livre
+                int maxSpot = usedSpots.isEmpty() ? 1 : Collections.max(usedSpots) + 1;
+                for (int i = 1; i <= maxSpot; i++) {
+                    if (!usedSpots.contains(i)) {
+                        firstAvailableSpot = i;
+                        break;
+                    }
+                }
+
+                return firstAvailableSpot;
+//                }Ï
+            }
+        } catch (SQLException e) {
+            e.printStackTrace(); // TODO: Melhorar isso aqui
+            return -1;
+        }
     }
 }

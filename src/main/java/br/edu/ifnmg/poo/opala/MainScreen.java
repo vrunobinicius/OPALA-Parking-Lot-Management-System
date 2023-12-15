@@ -1,5 +1,6 @@
 package br.edu.ifnmg.poo.opala;
 
+import br.edu.ifnmg.poo.parkingSpace.ParkingSpaceDAO;
 import br.edu.ifnmg.poo.helper.*;
 import br.edu.ifnmg.poo.credential.Credential;
 import br.edu.ifnmg.poo.credential.CredentialDAO;
@@ -7,10 +8,8 @@ import br.edu.ifnmg.poo.driver.Driver;
 import br.edu.ifnmg.poo.driver.DriverDAO;
 import br.edu.ifnmg.poo.helper.JTableUtils;
 import br.edu.ifnmg.poo.parkingSpace.ParkingSpace;
-import br.edu.ifnmg.poo.parkingSpace.ParkingSpaceDAO;
 import br.edu.ifnmg.poo.payment.Payment;
 import br.edu.ifnmg.poo.payment.PaymentDAO;
-import br.edu.ifnmg.poo.repository.DbConnection;
 import br.edu.ifnmg.poo.user.User;
 import br.edu.ifnmg.poo.user.UserDAO;
 import br.edu.ifnmg.poo.vehicle.Vehicle;
@@ -27,8 +26,6 @@ import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.logging.Level;
@@ -39,6 +36,8 @@ import javax.swing.event.DocumentListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 import javax.swing.text.MaskFormatter;
+
+import static br.edu.ifnmg.poo.parkingSpace.ParkingSpaceDAO.getNextFreeParkingSpot;
 
 /**
  *
@@ -206,43 +205,6 @@ public class MainScreen extends javax.swing.JFrame {
     private Vehicle getVehicleByParkingSpaceId(Long p) {
         VehicleDAO vDao = new VehicleDAO();
         return vDao.findById(p);
-    }
-
-    public int getNextFreeParkingSpot() throws SQLException {
-        int firstAvailableSpot = 1;
-
-        try {
-            Connection connection = DbConnection.getConnection();
-
-            // Recupera todas as vagas utilizadas
-            String usedSpotsQuery = "SELECT number FROM ParkingSpace ORDER BY number ASC";
-
-            try (PreparedStatement usedSpotsStatement = connection.prepareStatement(usedSpotsQuery)) {
-//                try (ResultSet usedSpotsResult = usedSpotsStatement.executeQuery()) {
-                ResultSet usedSpotsResult = usedSpotsStatement.executeQuery();
-
-                // Armazena as vagas utilizadas em uma lista
-                List<Integer> usedSpots = new ArrayList<>();
-                while (usedSpotsResult.next()) {
-                    usedSpots.add(usedSpotsResult.getInt("number"));
-                }
-
-                // Encontra a primeira vaga livre
-                int maxSpot = usedSpots.isEmpty() ? 1 : Collections.max(usedSpots) + 1;
-                for (int i = 1; i <= maxSpot; i++) {
-                    if (!usedSpots.contains(i)) {
-                        firstAvailableSpot = i;
-                        break;
-                    }
-                }
-
-                return firstAvailableSpot;
-//                }Ï
-            }
-        } catch (SQLException e) {
-            e.printStackTrace(); // TODO: Melhorar isso aqui
-            return -1;
-        }
     }
 
     public void setTxtVagaDefaultValue(int firstAvailableSpot) {
