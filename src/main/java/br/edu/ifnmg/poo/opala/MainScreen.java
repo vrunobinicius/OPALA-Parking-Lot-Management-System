@@ -234,6 +234,20 @@ public class MainScreen extends javax.swing.JFrame {
         });
     }
 
+    private void clearHomeFields() {
+        txtPlaca.setText(null);
+        FieldNotes.setText(null);
+        txtVaga.setText(null);
+        txtCheckInTime.setText(null);
+        txtCheckOutTime.setText(null);
+
+        try {
+            setTxtVagaDefaultValue(getNextFreeParkingSpot());
+        } catch (SQLException ex) {
+            Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     public final void FillCbPlaceComboBox() {
         cBplace.addItem("CARRO");
         cBplace.addItem("MOTO");
@@ -1218,18 +1232,7 @@ public class MainScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_FieldNotesActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        // TODO mover para limparCampos()
-        txtPlaca.setText(null);
-        FieldNotes.setText(null);
-        txtVaga.setText(null);
-        txtCheckInTime.setText(null);
-        txtCheckOutTime.setText(null);
-
-        try {
-            setTxtVagaDefaultValue(getNextFreeParkingSpot());
-        } catch (SQLException ex) {
-            Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        clearHomeFields();
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void setAndSaveVehicle(Vehicle v) throws Exception {
@@ -1247,14 +1250,14 @@ public class MainScreen extends javax.swing.JFrame {
     }
 
     // Registers the payment and returns true if successful
-    private boolean registerPayment() {
+    private void registerPayment() {
         if (PaymentPanel.isVisible()) {
             try {
                 // If the value is 0, we don't need to register the payment,
                 // but we need to remove the parked vehicle from the database
                 // regardless, so we return true
                 if (txtParkingFee.getText().equals("R$ 0,00")) {
-                    return true;
+                    return;
                 }
 
                 // Set parking space
@@ -1295,14 +1298,11 @@ public class MainScreen extends javax.swing.JFrame {
                     Logger.getLogger(MainScreen.class.getName()).log(Level.SEVERE, null, ex);
                 }
 
-                return true;
-
             } catch (Exception ex) {
                 System.out.println(ex.getMessage());
                 JOptionPane.showMessageDialog(this, "Erro ao salvar dados!", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
-        return false;
     }
 
     private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
@@ -1357,7 +1357,7 @@ public class MainScreen extends javax.swing.JFrame {
                 fillHomeTable(parkedTable);
                 registerPayment();
 
-                btnCancelActionPerformed(null);
+                clearHomeFields();
 
                 setTxtVagaDefaultValue(getNextFreeParkingSpot());
                 return;
@@ -1396,7 +1396,8 @@ public class MainScreen extends javax.swing.JFrame {
 
         fillHomeTable(parkedTable);
 
-        btnCancelActionPerformed(null);
+        clearHomeFields();
+
         try {
             setTxtVagaDefaultValue(getNextFreeParkingSpot());
         } catch (SQLException ex) {
