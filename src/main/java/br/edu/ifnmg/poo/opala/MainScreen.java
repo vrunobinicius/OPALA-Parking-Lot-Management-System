@@ -81,7 +81,9 @@ public class MainScreen extends javax.swing.JFrame {
     }
 
     private MainScreen(Credential credential) {
+
         this();
+
         switch (credential.getType()) {
             case ADMIN -> {
                 this.btnHome.setEnabled(true);
@@ -99,6 +101,8 @@ public class MainScreen extends javax.swing.JFrame {
         }
         this.setTitle(this.getTitle() + " - " + credential.getUser().getName());
     }
+
+
 
     public static MainScreen getInstance(Credential credential) {
         if (instance == null) {
@@ -128,8 +132,8 @@ public class MainScreen extends javax.swing.JFrame {
                 if (u != null) {
                     u.setCredential(c.findById(u.getId()));
                     model.addRow(new Object[]{
-                        u.getId(),
                         u.getName(),
+                        u.getCredential().getUsername(),
                         u.getEmail(),
                         u.getTelephone(),
                         // Convert Credential ENUM to string
@@ -1072,12 +1076,12 @@ public class MainScreen extends javax.swing.JFrame {
                 {null, null, null, null, null}
             },
             new String [] {
-                "id", "Nome", "E-mail", "Telefone", "Nível de Acesso"
+                "Nome", "Login", "E-mail", "Telefone", "Nível de Acesso"
             }
         ));
         userTable.setGridColor(new java.awt.Color(255, 255, 255));
         userTable.setSelectionBackground(new java.awt.Color(223, 249, 255));
-        userTable.setSelectionForeground(new java.awt.Color(255, 255, 255));
+        userTable.setSelectionForeground(new java.awt.Color(0, 0, 0));
         scrPaneLista2.setViewportView(userTable);
 
         pnlSearchIconUser.setBackground(new java.awt.Color(0, 133, 255));
